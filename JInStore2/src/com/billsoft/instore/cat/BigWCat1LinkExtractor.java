@@ -56,8 +56,8 @@ public class BigWCat1LinkExtractor extends BigWLinkBot implements LinkExtractorI
     private int insertCatHashSet(Set<String> hs) {
         int sum = 0;
         for (String url : hs) {
-            if(            insertCat1Url(url)){
-                sum ++;
+            if (insertCat1Url(url)) {
+                sum++;
             }
         }
         return sum;
