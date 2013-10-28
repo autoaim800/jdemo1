@@ -16,8 +16,7 @@ public class BigWShopifyItemDataExtractor extends GenericBuilder implements
         ShopifyItemDataExtractable {
 
     public static void main(String[] args) {
-        String itemUrl = "http://www.bigw.com.au/entertainment/books/teen/bpnBIGW_0000000122781/skulduggery-pleasant-faceless-ones-book-3";
-        itemUrl = "http://www.bigw.com.au/toys/lego-construction/lego/star-wars/bpnBIGW_0000000351390/lego-galaxy-squad-crater-creeper-70706";
+        String itemUrl = "http://www.bigw.com.au/entertainment/dvds-blu-ray/special-interest/bpnBIGW_AID102040/man-vs-wild-destination-usa-dvd";
 
         BigWShopifyItemDataExtractor bde = new BigWShopifyItemDataExtractor(null, itemUrl);
         ShopifyItemObject obj = bde.buildItemObject();
@@ -77,10 +76,16 @@ public class BigWShopifyItemDataExtractor extends GenericBuilder implements
     @Override
     public String extractCategory() {
         List<String> crumbs = extractNavCrumb();
-        if (null != crumbs && crumbs.size() > 3) {
-            return String.format("%s/%s/%s", crumbs.get(0), crumbs.get(1), crumbs.get(2));
+        if (null == crumbs) {
+            return null;
         }
-        return null;
+        StringBuilder sb = new StringBuilder();
+        for (String cat1 : crumbs) {
+            sb.append(cat1).append("/");
+        }
+        // return the whole list of strings
+        String tmp = sb.toString();
+        return tmp.substring(0, tmp.length() - 1);
     }
 
     @Override
@@ -104,19 +109,32 @@ public class BigWShopifyItemDataExtractor extends GenericBuilder implements
             error("no found div#replaceImage on " + url);
             return null;
         }
-        Elements imgNodes = repImgDiv.getElementsByTag(NODE_NAME_IMG);
-        if (null == imgNodes || imgNodes.size() < 1) {
-            error("no found img node under div#replaceImage on " + url);
+        if (repImgDiv.childNodeSize() < 1) {
+            error("no found child under div#replaceImage on " + url);
             return null;
         }
-        for (Element imgNode : imgNodes) {
-            if (imgNode.hasAttr(NODE_ATTR_SRC)) {
-                return imgNode.attr(NODE_ATTR_SRC);
-            }
+        Element anchor = repImgDiv.child(0);
+        if (null == anchor) {
+            error("no found child anchor under div#replaceImage on " + url);
+            return null;
         }
-
-        error("no found img with src on " + url);
-        return null;
+        if (anchor.hasAttr(NODE_ATTR_ONCLICK)) {
+            String onclick = anchor.attr(NODE_ATTR_ONCLICK);
+            // product_...n_caller('/media/BIGW/Pr....841902634.jpg','BIGW_AID102040')
+            int pt1 = onclick.indexOf("('");
+            if (pt1 > 0) {
+                int pt2 = onclick.indexOf("','", pt1);
+                if (pt2 > pt1) {
+                    // img src starts with '/'
+                    return onclick.substring(pt1 + 2, pt2);
+                }
+            }
+            error("failed to extract img-src from onclick " + url);
+            return null;
+        } else {
+            error("child anchor has NO attribute: onclick " + url);
+            return null;
+        }
     }
 
     private List<String> extractNavCrumb() {
@@ -183,10 +201,11 @@ public class BigWShopifyItemDataExtractor extends GenericBuilder implements
     @Override
     public String extractProductType() {
         List<String> crumbs = extractNavCrumb();
-        if (null != crumbs && crumbs.size() > 4) {
-            return crumbs.get(3);
+        if (null == crumbs) {
+            return null;
         }
-        return null;
+        // return last string
+        return crumbs.get(crumbs.size() - 1);
     }
 
     @Override

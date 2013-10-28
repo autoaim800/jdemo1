@@ -88,6 +88,7 @@ public class GenericBuilder {
             + "hash varchar(45), " + "url text, " + "status int default 0, "
             + "primary key (host, hash));";
     public static final String NODE_ATTR_CLASS = "class";
+    public static final String NODE_ATTR_ONCLICK= "onclick";
     public static final String NODE_ATTR_HREF = "href";
     public static final String NODE_ATTR_SRC = "src";
     public static final String NODE_NAME_ANCHOR = "a";
