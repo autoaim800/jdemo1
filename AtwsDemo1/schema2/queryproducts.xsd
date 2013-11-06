@@ -1,0 +1,784 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- Declare some types -->
+<xs:simpleType name="string-10">
+	<xs:restriction base="xs:string">
+		<xs:maxLength value="10" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="string-20">
+	<xs:restriction base="xs:string">
+		<xs:maxLength value="20" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="string-80">
+	<xs:restriction base="xs:string">
+		<xs:maxLength value="80" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="string-8192">
+	<xs:restriction base="xs:string">
+		<xs:maxLength value="8192" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="string-3">
+	<xs:restriction base="xs:string">
+		<xs:maxLength value="3" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="string-1024">
+	<xs:restriction base="xs:string">
+		<xs:maxLength value="1024" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="string-100">
+	<xs:restriction base="xs:string">
+		<xs:maxLength value="100" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="string-256">
+	<xs:restriction base="xs:string">
+		<xs:maxLength value="256" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="decimal-10-3">
+	<xs:restriction base="xs:decimal">
+		<xs:fractionDigits value="3" />
+		<xs:totalDigits value="10" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="decimal-12-9">
+	<xs:restriction base="xs:decimal">
+		<xs:fractionDigits value="9" />
+		<xs:totalDigits value="12" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="decimal-15-4">
+	<xs:restriction base="xs:decimal">
+		<xs:fractionDigits value="4" />
+		<xs:totalDigits value="15" />
+	</xs:restriction>
+</xs:simpleType>
+
+
+<xs:element name="atdw_data_results"> 
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="product_distribution" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="product_record" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="product_id" minOccurs="1" maxOccurs="1" type="string-100" />
+									<xs:element name="delete_indicator" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+									<xs:element name="international_ready_flag" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+									<xs:element name="national_head_office_flag" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+									<xs:element name="product_category_id" minOccurs="1" maxOccurs="1" type="string-100" />
+
+									<xs:element name="owning_organisation_id" minOccurs="1" maxOccurs="1" type="string-20" />
+									<xs:element name="contributing_organisation_id" minOccurs="1" maxOccurs="1" type="string-20" />
+
+									<xs:element name="market_variant_id" minOccurs="0" maxOccurs="1" type="string-100" />
+
+									<xs:element name="product_name" minOccurs="1" maxOccurs="1" type="string-8192" />
+
+									<xs:element name="australian_business_number" minOccurs="0" maxOccurs="1" type="string-20" />
+
+									<xs:element name="altitude" minOccurs="0" maxOccurs="1" type="xs:integer" />
+
+									<xs:element name="children_catered_for_flag" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+									<xs:element name="children_catered_for_text" minOccurs="0" maxOccurs="1" type="string-8192" />
+									<xs:element name="pets_allowed_flag" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+									<xs:element name="pets_allowed_text" minOccurs="0" maxOccurs="1" type="string-8192" />
+									<xs:element name="disabled_access_flag" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+									<xs:element name="disabled_access_text" minOccurs="0" maxOccurs="1" type="string-8192" />
+									<xs:element name="brochure_available_flag" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+									<xs:element name="brochure_available_text" minOccurs="0" maxOccurs="1" type="string-8192" />
+
+									<xs:element name="validity_date_from" minOccurs="0" maxOccurs="1" type="xs:date" />
+									<xs:element name="validity_date_to" minOccurs="0" maxOccurs="1" type="xs:date" />
+									<xs:element name="attribute_id_atdw_status" minOccurs="1" maxOccurs="1" type="string-100" />
+									<xs:element name="attribute_id_atdw_status_description" minOccurs="1" maxOccurs="1" type="string-1024" />
+									<xs:element name="atdw_expiry_date" minOccurs="1" maxOccurs="1" type="xs:string" />
+
+									<xs:element name="dining_capacity" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="number_of_restaurants" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="convention_capacity" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="convention_text" minOccurs="0" maxOccurs="1" type="string-8192" />
+									<xs:element name="lifts_flag" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+									<xs:element name="number_of_floors" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="number_of_rooms" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="total_capacity" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="check_in_time" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="check_out_time" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="reception_hours" minOccurs="0" maxOccurs="1" type="string-8192" />
+									<xs:element name="bedding_configuration_text" minOccurs="0" maxOccurs="1" type="string-8192" />
+
+									<xs:element name="temp_summer_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_summer_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_winter_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_winter_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+
+									<xs:element name="humidity_summer_average" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_winter_average" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_summer_average" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_winter_average" minOccurs="0" maxOccurs="1" type="xs:integer" />
+
+									<xs:element name="temp_jan_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_jan_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_feb_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_feb_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_mar_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_mar_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_apr_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_apr_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_may_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_may_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_jun_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_jun_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_jul_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_jul_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_aug_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_aug_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_sep_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_sep_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_oct_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_oct_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_nov_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_nov_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_dec_high" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="temp_dec_low" minOccurs="0" maxOccurs="1" type="xs:integer" />
+
+									<xs:element name="rainfall_jan" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_feb" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_mar" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_apr" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_may" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_jun" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_jul" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_aug" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_sep" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_oct" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_nov" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="rainfall_dec" minOccurs="0" maxOccurs="1" type="xs:integer" />
+
+									<xs:element name="humidity_jan" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_feb" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_mar" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_apr" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_may" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_jun" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_jul" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_aug" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_sep" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_oct" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_nov" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="humidity_dec" minOccurs="0" maxOccurs="1" type="xs:integer" />
+
+									<xs:element name="population" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="population_year" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="iata_code" minOccurs="0" maxOccurs="1" type="string-3" />
+									<xs:element name="nearest_highway" minOccurs="0" maxOccurs="1" type="string-8192" />
+									<xs:element name="nearest_airport_iata" minOccurs="0" maxOccurs="1" type="string-3" />
+									<xs:element name="nearest_airport" minOccurs="0" maxOccurs="1" type="string-8192" />
+									<xs:element name="nearest_airport_distance" minOccurs="0" maxOccurs="1" type="decimal-10-3" />
+									<xs:element name="attribute_id_airport_distance_unit" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="attribute_id_airport_distance_unit_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+									<xs:element name="attribute_id_nearest_gtwy_iata" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="attribute_id_nearest_gtwy_iata_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+									<xs:element name="nearest_gateway" minOccurs="0" maxOccurs="1" type="string-8192" />
+									<xs:element name="nearest_gateway_distance" minOccurs="0" maxOccurs="1" type="decimal-10-3" />
+									<xs:element name="attribute_id_gateway_distance_unit" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="attribute_id_gateway_distance_unit_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+
+									<xs:element name="frequency_start_date" minOccurs="0" maxOccurs="1" type="xs:date" />
+									<xs:element name="frequency_end_date" minOccurs="0" maxOccurs="1" type="xs:date" />
+									<xs:element name="attribute_id_frequency" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="attribute_id_frequency_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+									<xs:element name="attribute_id_event_status" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="attribute_id_event_status_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+									<xs:element name="free_entry_flag" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+									<xs:element name="visitor_numbers" minOccurs="0" maxOccurs="1" type="string-8192" />
+
+									<xs:element name="attribute_id_language_spoken" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="attribute_id_language_spoken_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+									<xs:element name="attribute_id_currency" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="attribute_id_currency_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+									<xs:element name="attribute_id_rate_basis" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="attribute_id_rate_basis_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+
+									<xs:element name="rate_from" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+									<xs:element name="rate_to" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+									<xs:element name="rate_basis_text" minOccurs="0" maxOccurs="1" type="string-1024" />
+
+									<xs:element name="suburb_name" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="city_name" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="area_name" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="state_name" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="country_name" minOccurs="0" maxOccurs="1" type="string-100" />
+
+									<xs:element name="international_region_name" minOccurs="0" maxOccurs="1" type="string-100" />
+									<xs:element name="domestic_region_name" minOccurs="0" maxOccurs="1" type="string-100" />
+
+									<xs:element name="product_description" minOccurs="0" maxOccurs="1" type="string-8192" />
+			   
+									<xs:element name="max_star_rating" minOccurs="0" maxOccurs="1" type="string-100" />
+									
+									<xs:element name="product_classification_match" minOccurs="0" maxOccurs="1" type="xs:int" />
+									<xs:element name="product_classifications" minOccurs="0" maxOccurs="1" type="xs:int" />
+									<xs:element name="service_classification_match" minOccurs="0" maxOccurs="1" type="xs:int" />																	
+									<xs:element name="service_classifications" minOccurs="0" maxOccurs="1" type="xs:int" />																	  
+  									<xs:element name="product_attribute_match" minOccurs="0" maxOccurs="1" type="xs:int" />																	  
+  									<xs:element name="product_attributes" minOccurs="0" maxOccurs="1" type="xs:int" />																	  
+  									<xs:element name="service_attribute_match" minOccurs="0" maxOccurs="1" type="xs:int" />																	  
+  									<xs:element name="service_attributes" minOccurs="0" maxOccurs="1" type="xs:int" />																	    
+  
+									<xs:element name="relevance" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="total_criteria" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="percent_relevance" minOccurs="0" maxOccurs="1" type="xs:integer" />
+									<xs:element name="article_flag" minOccurs="0" maxOccurs="1" type="xs:integer" />
+
+								</xs:sequence>
+							</xs:complexType>					
+						</xs:element>
+
+						<!-- *** PRODUCT_EXTERNAL_SYSTEM *** -->
+						<xs:element name="product_external_system" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence>
+								    <xs:element name="row" minOccurs="1" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="external_system_code" minOccurs="1" maxOccurs="1" type="string-256" />
+												<xs:element name="external_system_text" minOccurs="1" maxOccurs="1" type="string-1024" />
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+
+						<!-- *** EVENT FREQUENCY *** -->
+						<xs:element name="event_frequency" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="frequency_start_date" minOccurs="0" maxOccurs="1" />
+												<xs:element name="frequency_end_date" minOccurs="0" maxOccurs="1" />
+												<xs:element name="attribute_id_event_status" minOccurs="0" maxOccurs="1" />
+												<xs:element name="attribute_id_event_status_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+												<xs:element name="attribute_id_frequency_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+
+						<!-- *** PRODUCT SERVICE *** -->
+						<xs:element name="product_service" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence>
+								   <xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="service_id" minOccurs="1" maxOccurs="1" type="xs:integer" />
+												<xs:element name="service_name" minOccurs="0" maxOccurs="1" type="string-256" />
+												<xs:element name="service_description" minOccurs="0" maxOccurs="1" type="string-8192" />
+												<xs:element name="children_catered_for_flag" minOccurs="1" maxOccurs="1" type="xs:integer" />
+												<xs:element name="pets_allowed_flag" minOccurs="1" maxOccurs="1" type="xs:integer" />
+												<xs:element name="disabled_access_flag" minOccurs="1" maxOccurs="1" type="xs:integer" />
+												
+												<!-- *** SERVICE_TARIFF_ADULT *** -->
+												<xs:element name="service_tariff_adult" minOccurs="0" maxOccurs="1">
+												    <xs:complexType>
+														<xs:sequence>
+															<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="attribute_id_season" minOccurs="1" maxOccurs="1" type="string-10" />
+																		<xs:element name="attribute_id_season_description" minOccurs="1" maxOccurs="1" type="string-8192" />
+																		<xs:element name="attribute_id_season_description_mv" minOccurs="0" maxOccurs="1" type="string-8192" />
+																		<xs:element name="season_name" minOccurs="0" maxOccurs="1" type="string-1024" />
+																		<xs:element name="tariff_code_id" minOccurs="1" maxOccurs="1" type="xs:string" />
+																		<xs:element name="attribute_id_tariff_duration" minOccurs="0" maxOccurs="1" type="string-10" />
+																		<xs:element name="attribute_id_tariff_duration_description" minOccurs="0" maxOccurs="1" type="string-8192" />
+																		<xs:element name="attribute_id_tariff_duration_description_mv" minOccurs="0" maxOccurs="1" type="string-8192" />
+																		<xs:element name="attribute_id_rate_basis" minOccurs="0" maxOccurs="1" type="string-10" />
+																		<xs:element name="attribute_id_rate_basis_description" minOccurs="0" maxOccurs="1" type="string-8192" />
+																		<xs:element name="attribute_id_rate_basis_description_mv" minOccurs="0" maxOccurs="1" type="string-8192" />
+																		<xs:element name="tour_number_adult" minOccurs="0" maxOccurs="1" type="xs:integer" />
+																		<xs:element name="tour_rate_amount_per_adult" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+																		<xs:element name="rate_period" minOccurs="0" maxOccurs="1" type="xs:integer" />
+																		<xs:element name="rate_amount_per_unit" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+																		<xs:element name="attribute_id_rate_unit" minOccurs="0" maxOccurs="1" type="string-10" />
+																		<xs:element name="attribute_id_rate_unit_description" minOccurs="0" maxOccurs="1" type="string-8192" />
+																		<xs:element name="attribute_id_rate_unit_description_mv" minOccurs="0" maxOccurs="1" type="string-8192" />
+																		<xs:element name="rate_for_1_adult" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+																		<xs:element name="rate_for_2_adult" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+																		<xs:element name="rate_for_3_adult" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+																		<xs:element name="rate_for_4_adult" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+																		<xs:element name="rate_for_5_adult" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+																		<xs:element name="rate_for_6_adult" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+																		<xs:element name="rate_for_7_adult" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+																		<xs:element name="rate_for_8_adult" minOccurs="0" maxOccurs="1" type="decimal-15-4" />
+																		<xs:element name="tariff_type_text" minOccurs="0" maxOccurs="1" type="string-8192" />
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+												
+											</xs:sequence>
+										</xs:complexType>
+								   </xs:element>
+								</xs:sequence>
+							</xs:complexType>  
+						</xs:element>
+
+						<!-- *** PRODUCT_ADDRESS *** -->
+						<xs:element name="product_address" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="attribute_id_address" minOccurs="1" maxOccurs="1" type="string-10"  />
+												<xs:element name="attribute_id_address_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+												<xs:element name="attribute_id_address_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+												<xs:element name="address_line_1" minOccurs="1" maxOccurs="1" type="string-80"  />
+												<xs:element name="address_line_2" minOccurs="0" maxOccurs="1" type="string-80"  />
+												<xs:element name="address_line_3" minOccurs="0" maxOccurs="1" type="string-80"  />
+												<xs:element name="address_line_4" minOccurs="0" maxOccurs="1" type="string-80"  />
+												<xs:element name="suburb_name" minOccurs="0" maxOccurs="1" type="string-100"  />
+												<xs:element name="city_name" minOccurs="1" maxOccurs="1" type="string-100"  />
+												<xs:element name="area_name" minOccurs="0" maxOccurs="1" type="string-100"  />
+												<xs:element name="state_name" minOccurs="0" maxOccurs="1" type="string-100"  />
+												<xs:element name="country_name" minOccurs="1" maxOccurs="1" type="string-100"  />
+												<xs:element name="address_postal_code" minOccurs="1" maxOccurs="1" type="string-100"  />
+												<xs:element name="same_postal_address_flag" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+												<xs:element name="override_domestic_region_flag" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+												<xs:element name="address_lot_plan" minOccurs="0" maxOccurs="1" type="string-100"  />
+												<xs:element name="geocode_gda_latitude" minOccurs="0" maxOccurs="1" type="decimal-12-9" />
+												<xs:element name="geocode_gda_longitude" minOccurs="0" maxOccurs="1" type="decimal-12-9" />
+												<xs:element name="geocode_amg_east" minOccurs="0" maxOccurs="1" type="decimal-10-3"/>
+												<xs:element name="geocode_amg_north" minOccurs="0" maxOccurs="1" type="decimal-10-3" />
+												<xs:element name="geocode_amg_zone" minOccurs="0" maxOccurs="1" type="xs:int" />
+												<xs:element name="attribute_id_geocode_proj_sys" minOccurs="0" maxOccurs="1" type="string-100"  />
+												<xs:element name="attribute_id_geocode_proj_sys_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+												<xs:element name="attribute_id_geocode_proj_sys_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+
+												<!-- *** ADDRESS_STREET_DIRECTORY *** -->
+												<xs:element name="product_address_street_directory_relationship" minOccurs="0" maxOccurs="1">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="attribute_id_street_directory" minOccurs="1" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_street_directory_description" minOccurs="1" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_street_directory_description_mv" minOccurs="1" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="street_directory_reference" minOccurs="1" maxOccurs="1" type="string-100"  />
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>              
+									    
+												<!-- *** ADDRESS_DOMESTIC_REGION *** -->
+												<xs:element name="product_address_domestic_region_relationship" minOccurs="0" maxOccurs="1">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="domestic_region_name" minOccurs="0" maxOccurs="1" type="string-100"  />
+																		<xs:element name="domestic_region_type" minOccurs="0" maxOccurs="1" type="string-10"  />
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>              
+
+												<!-- *** AREA *** -->
+												<xs:element name="product_address_area_relationship" minOccurs="0" maxOccurs="1">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="area_name" minOccurs="1" maxOccurs="1" type="string-100"  />
+																		<xs:element name="area_type" minOccurs="1" maxOccurs="1" type="string-10"  />
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+
+											</xs:sequence>
+										</xs:complexType> 
+
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+
+						<!-- *** PRODUCT_COMMENT *** -->
+						<xs:element name="product_comment" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence>
+								   <xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="market_variant_name" minOccurs="0" maxOccurs="1" type="string-256" />
+												<xs:element name="sequence_number" minOccurs="1" maxOccurs="1" type="xs:integer" />
+												<xs:element name="attribute_id_product_comment" minOccurs="1" maxOccurs="1" type="string-100" />
+												<xs:element name="attribute_id_product_comment_description" minOccurs="1" maxOccurs="1" type="string-1024" />
+												<xs:element name="attribute_id_language_written" minOccurs="0" maxOccurs="1" type="string-100" />
+												<xs:element name="attribute_id_language_written_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+												<xs:element name="comment_date" minOccurs="0" maxOccurs="1" type="xs:date" />
+												<xs:element name="comment_follow_up_date" minOccurs="0" maxOccurs="1" type="xs:date" />
+												<xs:element name="comment_source" minOccurs="0" maxOccurs="1" type="string-1024" />
+												<xs:element name="comment_text" minOccurs="1" maxOccurs="1" type="string-8192" />
+											</xs:sequence>
+										</xs:complexType>
+								   </xs:element>
+								</xs:sequence>
+							</xs:complexType>  
+						</xs:element>
+
+						<!-- *** PRODUCT_VERTICAL_CLASSIFICATION *** -->
+						<xs:element name="product_vertical_classification" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="row" minOccurs="1" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="product_type_id" minOccurs="0" maxOccurs="1" type="string-10" />
+												<xs:element name="product_type_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+												<xs:element name="product_type_description_mv" minOccurs="0" maxOccurs="1" type="string-1024" />
+												<xs:element name="product_sub_type_1_id" minOccurs="0" maxOccurs="1" type="string-10" />
+												<xs:element name="product_sub_type_1_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+												<xs:element name="product_sub_type_1_description_mv" minOccurs="0" maxOccurs="1" type="string-1024" />
+												<xs:element name="product_sub_type_2_id" minOccurs="0" maxOccurs="1" type="string-10" />
+												<xs:element name="product_sub_type_2_description" minOccurs="0" maxOccurs="1" type="string-1024" />
+												<xs:element name="product_sub_type_2_description_mv" minOccurs="0" maxOccurs="1" type="string-1024" />
+												<xs:element name="product_sub_type_lowest" minOccurs="0" maxOccurs="1" type="string-100" />
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+					        </xs:element>
+
+						<!-- *** PRODUCT MULTIMEDIA *** -->
+						<xs:element name="product_multimedia" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence>
+								   <xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="market_variant_name" minOccurs="0" maxOccurs="1" type="string-256" />
+												<xs:element name="multimedia_id" minOccurs="1" maxOccurs="1" type="xs:integer" />
+												<xs:element name="server_path" minOccurs="0" maxOccurs="1" type="string-8192" />
+												<xs:element name="attribute_id_multimedia_file" minOccurs="0" maxOccurs="1" type="string-100" />
+												<xs:element name="attribute_id_size_orientation" minOccurs="0" maxOccurs="1" type="string-100" />
+												<xs:element name="width" minOccurs="0" maxOccurs="1" type="xs:integer" />
+												<xs:element name="height" minOccurs="0" maxOccurs="1" type="xs:integer" />
+												<xs:element name="alt_text" minOccurs="0" maxOccurs="1" type="string-8192" />
+											</xs:sequence>
+										</xs:complexType>
+								   </xs:element>
+								</xs:sequence>
+							</xs:complexType>  
+						</xs:element>
+
+					    <!-- *** PRODUCT_ARTICLE *** -->
+					    <xs:element name="product_article" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+											    <xs:element name="article_name" minOccurs="1" maxOccurs="1" type="string-256" />
+											    <xs:element name="article_keywords" minOccurs="1" maxOccurs="1" type="string-1024" />
+											    <xs:element name="article_description" minOccurs="0" maxOccurs="1" type="string-8192" />
+												
+												<!-- *** PRODUCT_ARTICLE_NAME *** -->
+												<xs:element name="product_article_name_relationship" minOccurs="0" maxOccurs="1">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="market_variant_id" minOccurs="0" maxOccurs="1" type="xs:string" />
+																		<xs:element name="attribute_id_name" minOccurs="1" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_name_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_name_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="name_detail" minOccurs="1" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_language_written" minOccurs="0" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_language_written_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_language_written_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>		
+
+												<!-- *** PRODUCT_ARTICLE_KEYWORDS *** -->
+												<xs:element name="product_article_keywords_relationship" minOccurs="0" maxOccurs="1">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="market_variant_id" minOccurs="0" maxOccurs="1" type="xs:string" />
+																		<xs:element name="attribute_id_keyword" minOccurs="1" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_keyword_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_keyword_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="keyword_detail" minOccurs="1" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_language_written" minOccurs="0" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_language_written_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_language_written_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>		
+
+												<!-- *** PRODUCT_ARTICLE_COMMENT_ *** -->
+												<xs:element name="product_article_comment_relationship" minOccurs="0" maxOccurs="unbounded">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+															    <xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="market_variant_id" minOccurs="0" maxOccurs="1" type="xs:string" />
+																		<xs:element name="attribute_id_article_comment" minOccurs="1" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_article_comment_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_article_comment_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="sequence_number" minOccurs="1" maxOccurs="1" type="xs:int" />
+																		<xs:element name="comment_date" minOccurs="0" maxOccurs="1" type="xs:date" />
+																		<xs:element name="comment_follow_up_date" minOccurs="0" maxOccurs="1" type="xs:date" />
+																		<xs:element name="comment_source" minOccurs="0" maxOccurs="1" type="string-1024"  />
+																		<xs:element name="attribute_id_language_written" minOccurs="0" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_language_written_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_language_written_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="comment_text" minOccurs="1" maxOccurs="1" type="string-8192"  />
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+		
+												<!-- *** PRODUCT_ARTICLE_ATTRIBUTE *** -->
+											    <xs:element name="product_article_attribute_relationship" minOccurs="1" maxOccurs="1">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="row" minOccurs="1" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="attribute_type_id" minOccurs="1" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id" minOccurs="1" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_text" minOccurs="0" maxOccurs="1" type="string-1024"  />
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+											    </xs:element>
+											    
+												<!-- *** PRODUCT_ARTICLE_MULTIMEDIA *** -->
+											    <xs:element name="product_article_multimedia_relationship" minOccurs="0" maxOccurs="1">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+															    <xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="market_variant_id" minOccurs="0" maxOccurs="1" type="xs:string" />
+																		<xs:element name="attribute_id_language_written" minOccurs="0" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_language_written_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_language_written_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="multimedia_id" minOccurs="1" maxOccurs="1" type="xs:int" />
+																		<xs:element name="authored_date" minOccurs="1" maxOccurs="1" type="xs:date" />
+																		<xs:element name="server_path" minOccurs="0" maxOccurs="1" type="string-256" />
+																		<xs:element name="attribute_id_multimedia_file" minOccurs="1" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_multimedia_file_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_multimedia_file_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_multimedia_content" minOccurs="1" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_multimedia_content_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_multimedia_content_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_size_orientation" minOccurs="1" maxOccurs="1" type="string-10"  />
+																		<xs:element name="attribute_id_size_orientation_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="attribute_id_size_orientation_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																		<xs:element name="width" minOccurs="0" maxOccurs="1" type="xs:int" />
+																		<xs:element name="height" minOccurs="0" maxOccurs="1" type="xs:int" />
+																		<xs:element name="alt_text" minOccurs="0" maxOccurs="1" type="string-1024"  />
+																		<xs:element name="caption" minOccurs="0" maxOccurs="1" type="string-1024"  />
+																		<xs:element name="photographer" minOccurs="0" maxOccurs="1" type="string-100"  />
+																		<xs:element name="multimedia_source" minOccurs="0" maxOccurs="1" type="string-100"  />
+																		<xs:element name="copyright" minOccurs="0" maxOccurs="1" type="string-100"  />
+																		<xs:element name="multimedia_description" minOccurs="0" maxOccurs="1" type="string-1024"  />
+																		<xs:element name="keywords" minOccurs="0" maxOccurs="1" type="string-100"  />
+																		<xs:element name="sequence_number" minOccurs="1" maxOccurs="1" type="xs:int" />
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+											    </xs:element>
+				
+												<!-- *** PRODUCT_ARTICLE_HIGHLIGHT *** -->
+												<xs:element name="product_article_highlight_relationship" minOccurs="0" maxOccurs="1">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="highlight_name" minOccurs="1" maxOccurs="1" type="string-256" />
+																		<xs:element name="highlight_description" minOccurs="1" maxOccurs="1" type="string-8192"  />
+												
+																		<!-- *** PRODUCT_ARTICLE_HIGHLIGHT_NAME *** -->
+																		<xs:element name="product_article_highlight_name_relationship" minOccurs="0" maxOccurs="1">
+																			<xs:complexType>
+																				<xs:sequence>
+																					<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+																						<xs:complexType>
+																							<xs:sequence>
+																								<xs:element name="market_variant_id" minOccurs="0" maxOccurs="1" type="xs:string" />
+																								<xs:element name="attribute_id_name" minOccurs="1" maxOccurs="1" type="string-10"  />
+																								<xs:element name="attribute_id_name_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="attribute_id_name_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="name_detail" minOccurs="1" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="attribute_id_language_written" minOccurs="0" maxOccurs="1" type="string-10"  />
+																								<xs:element name="attribute_id_language_written_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="attribute_id_language_written_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																							</xs:sequence>
+																						</xs:complexType>
+																					</xs:element>
+																				</xs:sequence>
+																			</xs:complexType>
+																		</xs:element>		
+
+																		<!-- *** PRODUCT_ARTICLE__HIGHLIGHT_COMMENT_ *** -->
+																		<xs:element name="product_article_highlight_comment_relationship" minOccurs="0" maxOccurs="unbounded">
+																			<xs:complexType>
+																				<xs:sequence>
+																					<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+																					    <xs:complexType>
+																							<xs:sequence>
+																								<xs:element name="market_variant_id" minOccurs="0" maxOccurs="1" type="xs:string" />
+																								<xs:element name="attribute_id_article_comment" minOccurs="1" maxOccurs="1" type="string-10"  />
+																								<xs:element name="attribute_id_article_comment_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="attribute_id_article_comment_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="sequence_number" minOccurs="1" maxOccurs="1" type="xs:int" />
+																								<xs:element name="comment_date" minOccurs="0" maxOccurs="1" type="xs:date" />
+																								<xs:element name="comment_follow_up_date" minOccurs="0" maxOccurs="1" type="xs:date" />
+																								<xs:element name="comment_source" minOccurs="0" maxOccurs="1" type="string-1024"  />
+																								<xs:element name="attribute_id_language_written" minOccurs="0" maxOccurs="1" type="string-10"  />
+																								<xs:element name="attribute_id_language_written_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="attribute_id_language_written_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="comment_text" minOccurs="1" maxOccurs="1" type="string-8192"  />
+																							</xs:sequence>
+																						</xs:complexType>
+																					</xs:element>
+																				</xs:sequence>
+																			</xs:complexType>
+																		</xs:element>
+		
+																		<!-- *** PRODUCT_ARTICLE_HIGHLIGHT_MULTIMEDIA *** -->
+																		<xs:element name="product_article_highlight_multimedia_relationship" minOccurs="1" maxOccurs="1">
+																			<xs:complexType>
+																				<xs:sequence>
+																					<xs:element name="row" minOccurs="1" maxOccurs="unbounded">
+																					    <xs:complexType>
+																							<xs:sequence>
+																								<xs:element name="market_variant_id" minOccurs="0" maxOccurs="1" type="xs:string" />
+																								<xs:element name="attribute_id_language_written" minOccurs="0" maxOccurs="1" type="string-10"  />
+																								<xs:element name="attribute_id_language_written_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="attribute_id_language_written_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="multimedia_id" minOccurs="1" maxOccurs="1" type="xs:int" />
+																								<xs:element name="authored_date" minOccurs="1" maxOccurs="1" type="xs:date" />
+																								<xs:element name="server_path" minOccurs="0" maxOccurs="1" type="string-256" />
+																								<xs:element name="attribute_id_multimedia_file" minOccurs="1" maxOccurs="1" type="string-10"  />
+																								<xs:element name="attribute_id_multimedia_file_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="attribute_id_multimedia_file_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="attribute_id_multimedia_content" minOccurs="1" maxOccurs="1" type="string-10"  />
+																								<xs:element name="attribute_id_multimedia_content_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="attribute_id_multimedia_content_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="attribute_id_size_orientation" minOccurs="1" maxOccurs="1" type="string-10"  />
+																								<xs:element name="attribute_id_size_orientation_description" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="attribute_id_size_orientation_description_mv" minOccurs="0" maxOccurs="1" type="string-8192"  />
+																								<xs:element name="width" minOccurs="0" maxOccurs="1" type="xs:int" />
+																								<xs:element name="height" minOccurs="0" maxOccurs="1" type="xs:int" />
+																								<xs:element name="alt_text" minOccurs="0" maxOccurs="1" type="string-1024"  />
+																								<xs:element name="caption" minOccurs="0" maxOccurs="1" type="string-1024"  />
+																								<xs:element name="photographer" minOccurs="0" maxOccurs="1" type="string-100"  />
+																								<xs:element name="multimedia_source" minOccurs="0" maxOccurs="1" type="string-100"  />
+																								<xs:element name="copyright" minOccurs="0" maxOccurs="1" type="string-100"  />
+																								<xs:element name="multimedia_description" minOccurs="0" maxOccurs="1" type="string-1024"  />
+																								<xs:element name="keywords" minOccurs="0" maxOccurs="1" type="string-100"  />
+																								<xs:element name="sequence_number" minOccurs="1" maxOccurs="1" type="xs:int" />
+																							</xs:sequence>
+																						</xs:complexType>
+																					</xs:element>
+																				</xs:sequence>
+																			</xs:complexType>
+																		</xs:element>
+																	</xs:sequence>	
+																</xs:complexType>	
+															</xs:element>
+														</xs:sequence>		
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>	
+								</xs:sequence>	
+							</xs:complexType>	
+					    </xs:element>
+
+					</xs:sequence>
+					
+					<xs:attribute name="product_id" type="xs:int" use="required" />
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="api_query_id" minOccurs="0" type="xs:string" />
+			<xs:element name="total_records_found" minOccurs="0" type="xs:int" />
+			<xs:element name="record_count_this_buffer" minOccurs="0" type="xs:int" />
+			<xs:element name="error" minOccurs="0" type="xs:string" />
+			<xs:element name="MSSQLError" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="HResult" type="string-1024" />
+					<xs:attribute name="Source" type="string-1024" />
+					<xs:attribute name="Description" type="string-1024" />
+				</xs:complexType>			
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+</xs:schema>

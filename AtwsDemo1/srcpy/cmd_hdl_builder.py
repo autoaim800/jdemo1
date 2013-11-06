@@ -167,15 +167,9 @@ class ClazzBuilder(SourceBuilder):
         clazzPackName = self.name.lower()
         packPrefix = "%s.%s" % (namespacePrefix, clazzPackName)
         getResult = """public %(PACK_PREFIX)s.Atdw_data_results retrieveResult()throws Exception{
-            
-            CommandHandler ch = new CommandHandler();            
-            ch.setDistributorKey(getDistKey());
-            ch.setCommandName(getName());
-            ch.setCommandParameters(getParams());
-            
-            CommandHandlerResponse resp = atws.commandHandler(ch);
-            
-            XMLStreamReader xsr = buildXmlStreamReader(resp);
+        
+        if (null == raw){raw = retrieveRawResult();}
+        XMLStreamReader xsr = buildXmlStreamReader(raw);
             return %(PACK_PREFIX)s.Atdw_data_results.Factory.parse(xsr);            
         }""" % {"PACK_PREFIX":packPrefix}
             
