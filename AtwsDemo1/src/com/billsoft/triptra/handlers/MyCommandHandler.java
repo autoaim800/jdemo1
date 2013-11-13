@@ -15,6 +15,8 @@ import org.tempuri.soap.australiantourismwebservice.AustralianTourismWebServiceS
 import org.tempuri.soap.australiantourismwebservice.CommandHandler;
 import org.tempuri.soap.australiantourismwebservice.CommandHandlerResponse;
 
+import com.billsoft.triptra.Const;
+
 public class MyCommandHandler {
     protected AustralianTourismWebServiceStub atws;
     protected String raw = null;
@@ -95,6 +97,8 @@ public class MyCommandHandler {
      * retrieve string-result via http soap
      */
     protected String retrieveRawResult() throws RemoteException {
+        
+        Const.logger.info("http retrieving ...");
 
         CommandHandler ch = new CommandHandler();
         ch.setDistributorKey(getDistKey());
