@@ -9,6 +9,7 @@ module BillBot1
     let(:bot) { BillBot1::ToyRobot.new(BillBot1::Table.new(5)) }
 
     describe "#turn_prior_to_place" do
+
       it "turn left" do
         bot.command("LEFT").should == nil
         bot.command("REPORT").should == nil
@@ -27,6 +28,7 @@ module BillBot1
     end
 
     describe "#turn_right" do
+
       it "turn right at 0,0,NORTH" do
         bot.command("PLACE 0,0,NORTH").should_not == nil
         bot.command("RIGHT").should_not == nil
@@ -55,6 +57,12 @@ module BillBot1
         bot.command("PLACE 0,0,NORTH").should_not == nil
         bot.command("LEFT").should_not == nil
         bot.command("REPORT").should == "0,0,WEST"
+      end
+
+      it "turn left at 2,2,EAST" do
+        bot.command("PLACE 2,2,EAST").should_not == nil
+        bot.command("LEFT").should_not == nil
+        bot.command("REPORT").should == "2,2,NORTH"
       end
 
       it "turn leftx2 at 0,0,NORTH" do

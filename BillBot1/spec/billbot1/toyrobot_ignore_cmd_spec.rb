@@ -8,10 +8,31 @@ module BillBot1
 
     let(:bot) { BillBot1::ToyRobot.new(BillBot1::Table.new(5)) }
 
-    describe "#move_prior_to_place" do
-      it "not placed" do
-        bot.command("JUMP").should == nil
+    describe "#prior_to_place" do
+      it "ignore move" do
+        bot.command("MOVE").should == nil
+        bot.command("MOVE").should == nil
       end
+
+      it "ignore turn left" do
+        bot.command("LEFT").should == nil
+      end
+
+      it "ignore turn right" do
+        bot.command("RIGHT").should == nil
+      end
+
+      it "ignore turn right and left" do
+        bot.command("RIGHT").should == nil
+        bot.command("LEFT").should == nil
+        bot.command("RIGHT").should == nil
+      end
+
+      it "ignore unknown command" do
+        bot.command("DANCE").should == nil
+      end
+
+
     end
 
     describe "#unknown_cmd" do
