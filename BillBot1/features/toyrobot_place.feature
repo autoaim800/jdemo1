@@ -4,40 +4,40 @@ Feature: place toy robot
   all position out of the table should be ignored
 
   Scenario: placed at 00NORTH
-    Given a table width 5
-    When place at "0,0,NORTH"
-    Then report as "0,0,NORTH"
+    Given I have a table width 5
+    When I place robot at "0,0,NORTH"
+    Then Robot should report as "0,0,NORTH"
 
   Scenario: placed at 11NORTH
-    Given a table width 5
-    When place at "1,1,NORTH"
-    Then report as "1,1,NORTH"
+    Given I have a table width 5
+    When I place robot at "1,1,NORTH"
+    Then Robot should report as "1,1,NORTH"
 
   Scenario: replace after move from 00NORTH
-    Given a table width 5
-    When place at "0,0,NORTH"
+    Given I have a table width 5
+    When I place robot at "0,0,NORTH"
     And manage to move
-    And place at "0,0,NORTH"
-    Then report as "0,0,NORTH"
+    And I place robot at "0,0,NORTH"
+    Then Robot should report as "0,0,NORTH"
 
-  Scenario: replace after turn right from 00NORTH
-    Given a table width 5
-    When place at "0,0,NORTH"
-    And turn right
-    And place at "0,0,NORTH"
-    Then report as "0,0,NORTH"
+  Scenario: replace after I command turn right from 00NORTH
+    Given I have a table width 5
+    When I place robot at "0,0,NORTH"
+    And I command turn right
+    And I place robot at "0,0,NORTH"
+    Then Robot should report as "0,0,NORTH"
 
   Scenario: replace after turn left from 00NORTH
-    Given a table width 5
-    When place at "0,0,NORTH"
-    And turn left
-    And place at "0,0,NORTH"
-    Then report as "0,0,NORTH"
+    Given I have a table width 5
+    When I place robot at "0,0,NORTH"
+    And I command turn left
+    And I place robot at "0,0,NORTH"
+    Then Robot should report as "0,0,NORTH"
 
   Scenario Outline: place at valid position
-    Given a table width 5
-    When place at "<position>"
-    Then report as "<position>"
+    Given I have a table width 5
+    When I place robot at "<position>"
+    Then Robot should report as "<position>"
     Examples: all valid position
       | position |
       | 0,0,EAST |
@@ -142,9 +142,9 @@ Feature: place toy robot
       | 4,4,NORTH |
 
   Scenario Outline: place at invalid position
-    Given a table width 5
-    When try to place at "<position>"
-    Then try to report
+    Given I have a table width 5
+    When I try to place robot at "<position>"
+    Then I try to report
   Examples: all invalid x-axis
     | position |
     | -9,0,EAST |
