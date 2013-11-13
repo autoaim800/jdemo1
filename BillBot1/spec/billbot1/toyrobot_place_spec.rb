@@ -15,6 +15,7 @@ module BillBot1
     end
 
     describe "#place_valid" do
+
       it "place at 0,0,NORTH" do
            bot.command("PLACE 0,0,NORTH").should_not == nil
            bot.command("REPORT").should == "0,0,NORTH"
