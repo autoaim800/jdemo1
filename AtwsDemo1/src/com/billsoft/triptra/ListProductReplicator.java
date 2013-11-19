@@ -6,13 +6,14 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import com.billsoft.triptra.handlers.GetProduct;
 import com.billsoft.triptra.handlers.QueryProducts;
 import com.billsoft.triptra.handlers.QueryProductsNextPage;
 import com.billsoft.triptra.xsd.queryproducts.Atdw_data_results;
 import com.billsoft.triptra.xsd.queryproducts.Product_distribution_type0;
 
 /**
+ * this class is for direct service call of getproducts
+ * 
  * @author bill
  * 
  */
@@ -46,25 +47,26 @@ public class ListProductReplicator extends PageReplicator {
 
         Product_distribution_type0[] dists = result.getProduct_distribution();
 
-        for (Product_distribution_type0 dist : dists) {
+        try {
+            conn.setAutoCommit(false);
 
-            int prodId = dist.getProduct_id();
+            for (Product_distribution_type0 dist : dists) {
 
-            SingleProductReplicator spr = new SingleProductReplicator(key, conn, prodId);
+                int prodId = dist.getProduct_id();
 
-            logger.info(String.format("product: %s=%s", prodId, spr.replicate()));
+                SingleProductReplicator spr = new SingleProductReplicator(key, conn, prodId);
+                spr.replicate();
+
+                conn.commit();
+            }
+            // out of for each product
+
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        // out of for echo product
 
-    }
-
-    public void replicate() {
-        // state
-        // region
-        // area
-        // city
-        // queryCities();
-        queryProducts();
     }
 
     private void queryProducts() {
@@ -153,5 +155,22 @@ public class ListProductReplicator extends PageReplicator {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * 1 queryproducts => product_id
+     * 
+     * 2 getproduct => service_id
+     * 
+     * 3 getproductservice => ends?
+     */
+    public boolean replicate() {
+        // state
+        // region
+        // area
+        // city
+        // queryCities();
+        queryProducts();
+        return false;
     }
 }

@@ -7,20 +7,24 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 import com.billsoft.triptra.handlers.GetProduct;
-import com.billsoft.triptra.inserter.getproduct.Address;
-import com.billsoft.triptra.inserter.getproduct.Contact;
-import com.billsoft.triptra.inserter.getproduct.Inserter;
-import com.billsoft.triptra.inserter.getproduct.Service;
+import com.billsoft.triptra.inserter.getproduct.GpAddress;
+import com.billsoft.triptra.inserter.getproduct.GpContact;
+import com.billsoft.triptra.inserter.getproduct.GpInserter;
+import com.billsoft.triptra.inserter.getproduct.GpService;
 import com.billsoft.triptra.xsd.getproduct.Atdw_data_results;
-import com.billsoft.triptra.xsd.getproduct.Product_address_area_relationship_type0;
-import com.billsoft.triptra.xsd.getproduct.Product_address_domestic_region_relationship_type0;
-import com.billsoft.triptra.xsd.getproduct.Product_address_street_directory_relationship_type0;
 import com.billsoft.triptra.xsd.getproduct.Product_address_type0;
 import com.billsoft.triptra.xsd.getproduct.Product_contact_type0;
 import com.billsoft.triptra.xsd.getproduct.Product_distribution_type0;
+import com.billsoft.triptra.xsd.getproduct.Product_service_type0;
 import com.billsoft.triptra.xsd.getproduct.Row_type29;
 import com.billsoft.triptra.xsd.getproduct.Row_type5;
 
+/**
+ * this class is for direct service call of getProduct
+ * 
+ * @author bill
+ * 
+ */
 public class SingleProductReplicator extends PageReplicator {
 
     /**
@@ -29,7 +33,8 @@ public class SingleProductReplicator extends PageReplicator {
     public static void main(String[] args) {
         Connection conn = DbHelper.obtainConnection();
 
-        SingleProductReplicator spr = new SingleProductReplicator(Const.DIST_KEY, conn, 9123438);
+        // 9002472, 9036130 multimedia duplication
+        SingleProductReplicator spr = new SingleProductReplicator(Const.DIST_KEY, conn, 9036130);
         spr.replicate();
 
         try {
@@ -39,7 +44,7 @@ public class SingleProductReplicator extends PageReplicator {
         }
     }
 
-    private int prodId;
+    private int mProductId;
 
     public SingleProductReplicator(String distKey) {
         this(distKey, null, 0);
@@ -49,10 +54,10 @@ public class SingleProductReplicator extends PageReplicator {
         this(distKey, conn, 0);
     }
 
-    public SingleProductReplicator(String distKey, Connection conn, int productId) {
+    public SingleProductReplicator(String distKey, Connection conn, int _productId) {
         super(distKey, conn);
 
-        prodId = productId;
+        mProductId = _productId;
     }
 
     private void insertProductAddress(Product_address_type0 productAddress) {
@@ -62,45 +67,15 @@ public class SingleProductReplicator extends PageReplicator {
 
             for (Row_type5 row : productAddress.getRow()) {
 
-                Address.insert(conn, prodId, row.getProduct_address_area_relationship());
-                Address.insert(conn, prodId, row.getProduct_address_street_directory_relationship());
-                Address.insert(conn, prodId, row.getProduct_address_domestic_region_relationship());
+                GpAddress.insert(conn, mProductId, row.getProduct_address_area_relationship());
+                GpAddress.insert(conn, mProductId,
+                        row.getProduct_address_street_directory_relationship());
+                GpAddress.insert(conn, mProductId,
+                        row.getProduct_address_domestic_region_relationship());
 
-                Address.insert(conn, prodId, row);
+                GpAddress.insert(conn, mProductId, row);
             }
         }
-    }
-
-    private void procResult(Atdw_data_results result) {
-
-        Logger logger = Const.getLogger();
-
-        Product_distribution_type0 dist = result.getProduct_distribution();
-
-        int productId = dist.getProduct_id();
-        if (prodId > 0 && productId != prodId) {
-            logger.error(String.format("productId %d <> %d", productId, prodId));
-        } else {
-            prodId = productId;
-        }
-
-        insertProductAddress(dist.getProduct_address());
-        insertProductContact(dist.getProduct_contact());
-
-        Address.insert(conn, prodId, dist.getProduct_record());
-
-        Inserter.insert(conn, prodId, dist.getProduct_multimedia());
-        Service.insert(conn, prodId, dist.getProduct_service());
-        Inserter.insert(conn, prodId, dist.getProduct_open_time());
-
-        Inserter.insert(conn, prodId, dist.getProduct_article());
-        Inserter.insert(conn, prodId, dist.getProduct_entry_cost());
-        Inserter.insert(conn, prodId, dist.getProduct_article());
-
-        Inserter.insert(conn, prodId, dist.getProduct_proximity());
-        Inserter.insert(conn, prodId, dist.getProduct_licence());
-        Inserter.insert(conn, prodId, dist.getProduct_sponsor());
-
     }
 
     private int insertProductContact(Product_contact_type0 productContact) {
@@ -110,16 +85,71 @@ public class SingleProductReplicator extends PageReplicator {
         int afrc = 0;
         for (Row_type29 row : productContact.getRow()) {
 
-            afrc += Contact.insert(conn, row.getProduct_contact_address_relationship());
-            afrc += Contact.insert(conn, row.getProduct_contact_attribute_relationship());
-            afrc += Contact.insert(conn, row.getProduct_contact_comment_relationship());
-            afrc += Contact.insert(conn, row.getProduct_contact_communication_relationship());
-            afrc += Contact.insert(conn, row.getProduct_contact_multimedia_relationship());
+            afrc += GpContact.insert(conn, row.getProduct_contact_address_relationship());
+            afrc += GpContact.insert(conn, row.getProduct_contact_attribute_relationship());
+            afrc += GpContact.insert(conn, row.getProduct_contact_comment_relationship());
+            afrc += GpContact.insert(conn, row.getProduct_contact_communication_relationship());
+            afrc += GpContact.insert(conn, row.getProduct_contact_multimedia_relationship());
 
-            afrc += Contact.insert(conn, prodId, row);
+            afrc += GpContact.insert(conn, mProductId, row);
 
         }
         return afrc;
+    }
+
+    private void insertProductService(Product_service_type0 service) {
+        if (null == service || null == service.getRow()) {
+            return;
+        }
+
+        // TODO not finish
+        // for (Row_type64 svc : service.getRow()) {
+        // ProductServiceReplicator psp = new
+        // ProductServiceReplicator(this.mKey, mConn,
+        // mProductId, svc.getService_id());
+        // psp.replicate();
+        // }
+
+        // insert level-1 service
+        GpService.insert(conn, mProductId, service);
+
+    }
+
+    private void procResult(Atdw_data_results result) {
+
+        Logger logger = Const.getLogger();
+
+        Product_distribution_type0 dist = result.getProduct_distribution();
+
+        int _prodId = dist.getProduct_id();
+        if (mProductId > 0 && _prodId != mProductId) {
+            logger.error(String.format("productId %d <> %d", _prodId, mProductId));
+        } else {
+            mProductId = _prodId;
+        }
+
+        insertProductAddress(dist.getProduct_address());
+        insertProductContact(dist.getProduct_contact());
+        insertProductService(dist.getProduct_service());
+
+        GpAddress.insert(conn, mProductId, dist.getProduct_record());
+        GpInserter.insert(conn, mProductId, dist.getProduct_multimedia());
+        GpInserter.insert(conn, mProductId, dist.getProduct_open_time());
+
+        GpInserter.insert(conn, mProductId, dist.getProduct_article());
+        GpInserter.insert(conn, mProductId, dist.getProduct_entry_cost());
+        GpInserter.insert(conn, mProductId, dist.getProduct_article());
+
+        GpInserter.insert(conn, mProductId, dist.getProduct_proximity());
+        GpInserter.insert(conn, mProductId, dist.getProduct_licence());
+        GpInserter.insert(conn, mProductId, dist.getProduct_sponsor());
+
+        GpInserter.insert(conn, mProductId, dist.getProduct_communication());
+        GpInserter.insert(conn, mProductId, dist.getProduct_name());
+        GpInserter.insert(conn, _prodId, dist.getProduct_attribute());
+
+        GpInserter.insert(conn, _prodId, dist.getProduct_related_service());
+        GpInserter.insert(conn, _prodId, dist.getProduct_related_product());
     }
 
     /**
@@ -130,9 +160,9 @@ public class SingleProductReplicator extends PageReplicator {
      */
     public boolean replicate() {
 
-        GetProduct gp = new GetProduct(key, String.valueOf(prodId));
+        GetProduct gp = new GetProduct(key, String.valueOf(mProductId));
 
-        String fp = String.format("out/%s.xml", prodId);
+        String fp = String.format("out/%s.xml", mProductId);
         boolean needWriteFile = false;
 
         needWriteFile = true;
@@ -144,16 +174,23 @@ public class SingleProductReplicator extends PageReplicator {
 
         com.billsoft.triptra.xsd.getproduct.Atdw_data_results prodResult;
         boolean ret = false;
+        long netTime = 0;
+        long xmlTime = 0;
         try {
+            long t1 = System.currentTimeMillis();
             prodResult = gp.retrieveResult();
+            long t2 = System.currentTimeMillis();
 
             if (null == prodResult) {
-                Const.logger.error("null result retrieved for product: " + this.prodId);
+                Const.logger.error("null result retrieved for product: " + this.mProductId);
             } else {
-
                 procResult(prodResult);
+                
                 ret = true;
             }
+            long t3 = System.currentTimeMillis();
+            xmlTime = t3 - t2;
+            netTime = t2 - t1;
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -164,6 +201,8 @@ public class SingleProductReplicator extends PageReplicator {
             writef(fp, gp.getRaw());
         }
 
+        Const.logger.info(String.format("product: %s:%s, net-time: %s, xml-proc-time: %s",
+                mProductId, ret, netTime, xmlTime));
         return ret;
     }
 }

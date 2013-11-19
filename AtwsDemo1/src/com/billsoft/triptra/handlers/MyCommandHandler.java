@@ -19,20 +19,12 @@ import com.billsoft.triptra.Const;
 
 public class MyCommandHandler {
     protected AustralianTourismWebServiceStub atws;
-    protected String raw = null;
-    public void setRaw(String raw) {
-        this.raw = raw;
-    }
-
-    public String getRaw() {
-        return raw;
-    }
-
     private Map<String, String> dish = new HashMap<String, String>();
     private String distKey;
 
     private String name;
 
+    protected String raw = null;
     private XMLInputFactory xfactory;
 
     public MyCommandHandler(String distKey, String name) {
@@ -93,13 +85,16 @@ public class MyCommandHandler {
         return sb.toString();
     }
 
+    public String getRaw() {
+        return raw;
+    }
+
     /**
      * retrieve string-result via http soap
      */
     protected String retrieveRawResult() throws RemoteException {
-        
-        Const.logger.info("http retrieving ...");
 
+        Const.logger.info("http retrieving ...");
         CommandHandler ch = new CommandHandler();
         ch.setDistributorKey(getDistKey());
         ch.setCommandName(getName());
@@ -111,6 +106,10 @@ public class MyCommandHandler {
 
     protected void setName(String name) {
         this.name = name;
+    }
+
+    public void setRaw(String raw) {
+        this.raw = raw;
     }
 
     @Override

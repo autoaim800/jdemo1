@@ -20,7 +20,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-public class PageReplicator {
+public abstract class PageReplicator {
 
     public static void pprint(String raw) {
         System.out.println(pretty(raw));
@@ -117,9 +117,11 @@ public class PageReplicator {
 
     protected String key;
 
-    public PageReplicator(String distKey, Connection conn) {
-        this.key = distKey;
-        this.conn = conn;
+    public PageReplicator(String distKey, Connection connection) {
+        key = distKey;
+        conn = connection;
     }
+
+    public abstract boolean replicate();
 
 }
