@@ -3,54 +3,54 @@ Feature: turn toy robot
   toy robot should be able to turn to either right or left after placed
   should able to turn in iteration of EAST, SOUTH, WEST, NORTH
 
-  Scenario: ignore turn right prior place
-    Given a table width 5
-    When try to turn right
-    Then try to report
+  Scenario: ignore I command turn right prior place
+    Given I have a table width 5
+    When I try to turn right
+    Then I try to report
 
-  Scenario: ignore turn right prior place
-    Given a table width 5
-    When try to turn left
-    Then try to report
+  Scenario: ignore I command turn right prior place
+    Given I have a table width 5
+    When I try to turn left
+    Then I try to report
 
-  Scenario: placed at 00NORTH then turn right
-    Given a table width 5
-    When place at "0,0,NORTH"
-    And turn right
-    When place at "0,0,EAST"
+  Scenario: placed at 00NORTH then I command turn right
+    Given I have a table width 5
+    When I place robot at "0,0,NORTH"
+    And I command turn right
+    When I place robot at "0,0,EAST"
 
   Scenario: placed at 00NORTH then turn left
-    Given a table width 5
-    When place at "0,0,NORTH"
-    And turn left
-    When place at "0,0,WEST"
+    Given I have a table width 5
+    When I place robot at "0,0,NORTH"
+    And I command turn left
+    When I place robot at "0,0,WEST"
 
-  Scenario: placed at 22NORTH then move and turn right
-    Given a table width 5
-    When place at "2,2,NORTH"
-    And turn right
+  Scenario: placed at 22NORTH then move and I command turn right
+    Given I have a table width 5
+    When I place robot at "2,2,NORTH"
+    And I command turn right
     And manage to move
-    When place at "3,2,EAST"
+    When I place robot at "3,2,EAST"
 
-  Scenario: placed at 22NORTH then move and turn left
-    Given a table width 5
-    When place at "2,2,NORTH"
-    And turn left
+  Scenario: placed at 22NORTH then move and I command turn left
+    Given I have a table width 5
+    When I place robot at "2,2,NORTH"
+    And I command turn left
     And manage to move
-    When place at "1,2,WEST"
+    When I place robot at "1,2,WEST"
 
-  Scenario: placed at 00NORTH then turn left twice
-    Given a table width 5
-    When place at "0,0,NORTH"
-    And turn left
-    And turn left
-    When place at "0,0,SOUTH"
+  Scenario: placed at 00NORTH then I command turn left twice
+    Given I have a table width 5
+    When I place robot at "0,0,NORTH"
+    And I command turn left
+    And I command turn left
+    When I place robot at "0,0,SOUTH"
 
-  Scenario Outline: place at nnN then turn left
-    Given a table width 5
-    When place at "<position1>"
-    And turn left
-    Then report as "<position2>"
+  Scenario Outline: place at nnN then I command turn left
+    Given I have a table width 5
+    When I place robot at "<position1>"
+    And I command turn left
+    Then Robot should report as "<position2>"
     Examples: all valid position
       | position1| position2 |
       | 0,0,EAST | 0,0,NORTH |
@@ -155,12 +155,12 @@ Feature: turn toy robot
       | 4,4,NORTH | 4,4,WEST |
 
 
-  Scenario Outline: place at nnN then turn right
-    Given a table width 5
-    When place at "<position1>"
-    And turn right
-    Then report as "<position2>"
-    Examples: all valid turn right
+  Scenario Outline: place at nnN then I command turn right
+    Given I have a table width 5
+    When I place robot at "<position1>"
+    And I command turn right
+    Then Robot should report as "<position2>"
+    Examples: all valid I command turn right
       | position1| position2 |
       | 0,0,EAST | 0,0,SOUTH |
       | 0,1,EAST | 0,1,SOUTH |
@@ -264,14 +264,14 @@ Feature: turn toy robot
       | 4,4,NORTH | 4,4,EAST |
 
 
-  Scenario Outline: place at nnN then turn left fourth
-    Given a table width 5
-    When place at "<position>"
-    And turn left
-    And turn left
-    And turn left
-    And turn left
-    Then report as "<position>"
+  Scenario Outline: place at nnN then I command turn left fourth
+    Given I have a table width 5
+    When I place robot at "<position>"
+    And I command turn left
+    And I command turn left
+    And I command turn left
+    And I command turn left
+    Then Robot should report as "<position>"
     Examples: all valid position
       | position |
       | 0,0,EAST |
@@ -375,14 +375,14 @@ Feature: turn toy robot
       | 4,3,NORTH |
       | 4,4,NORTH |
 
-  Scenario Outline: place at nnN then turn right fourth
-    Given a table width 5
-    When place at "<position>"
-    And turn right
-    And turn right
-    And turn right
-    And turn right
-    Then report as "<position>"
+  Scenario Outline: place at nnN then I command turn right fourth
+    Given I have a table width 5
+    When I place robot at "<position>"
+    And I command turn right
+    And I command turn right
+    And I command turn right
+    And I command turn right
+    Then Robot should report as "<position>"
   Examples: all valid position
     | position |
     | 0,0,EAST |
@@ -486,12 +486,12 @@ Feature: turn toy robot
     | 4,3,NORTH |
     | 4,4,NORTH |
 
-  Scenario Outline: place at nnN then turn right twice
-    Given a table width 5
-    When place at "<position1>"
-    And turn right
-    And turn right
-    Then report as "<position2>"
+  Scenario Outline: place at nnN then I command turn right twice
+    Given I have a table width 5
+    When I place robot at "<position1>"
+    And I command turn right
+    And I command turn right
+    Then Robot should report as "<position2>"
     Examples:
       |position1 | position2|
       | 0,0,EAST | 0,0,WEST |
@@ -595,12 +595,12 @@ Feature: turn toy robot
       | 4,3,NORTH | 4,3,SOUTH |
       | 4,4,NORTH | 4,4,SOUTH |
 
-  Scenario Outline: place at nnN then turn right twice
-    Given a table width 5
-    When place at "<position1>"
-    And turn right
-    And turn right
-    Then report as "<position2>"
+  Scenario Outline: place at nnN then I command turn right twice
+    Given I have a table width 5
+    When I place robot at "<position1>"
+    And I command turn right
+    And I command turn right
+    Then Robot should report as "<position2>"
     Examples:
     | position1 | position2 |
     | 0,0,EAST | 0,0,WEST |

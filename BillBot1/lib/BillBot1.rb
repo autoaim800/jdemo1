@@ -8,6 +8,7 @@ module BillBot1
   # read only properties: x, y, facing, distance and placed
   class ToyRobot
 
+    #attribute for debugging purpose only
     attr_reader :x, :y, :facing, :distance, :placed
 
     ORIENTATIONS = [:EAST, :SOUTH, :WEST, :NORTH]
@@ -50,6 +51,7 @@ module BillBot1
     end
 
     private
+
     def report
       if @placed
         ret = "#{@x},#{@y},#{@facing}"
@@ -163,6 +165,7 @@ module BillBot1
 
   # class hold only square-width of the table
   class Table
+
     attr_reader :width
 
     # @param width an integer of table square-width

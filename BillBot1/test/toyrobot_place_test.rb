@@ -12,7 +12,6 @@ class ToyRobotPlaceTest < Test::Unit::TestCase
 
   # Called after every test method runs. Can be used to tear
   # down fixture information.
-
   def teardown
     # Do nothing
   end

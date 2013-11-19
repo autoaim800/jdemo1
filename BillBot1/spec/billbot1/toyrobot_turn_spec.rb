@@ -9,17 +9,18 @@ module BillBot1
     let(:bot) { BillBot1::ToyRobot.new(BillBot1::Table.new(5)) }
 
     describe "#turn_prior_to_place" do
-      it "turn left" do
+
+      it "should not turn left" do
         bot.command("LEFT").should == nil
         bot.command("REPORT").should == nil
       end
 
-      it "turn right" do
+      it "should not turn right" do
         bot.command("RIGHT").should == nil
         bot.command("REPORT").should == nil
       end
 
-      it "turn rightx2" do
+      it "should not turn right x2" do
         bot.command("RIGHT").should == nil
         bot.command("RIGHT").should == nil
         bot.command("REPORT").should == nil
@@ -27,20 +28,21 @@ module BillBot1
     end
 
     describe "#turn_right" do
-      it "turn right at 0,0,NORTH" do
+
+      it "should turn right at 0,0,NORTH" do
         bot.command("PLACE 0,0,NORTH").should_not == nil
         bot.command("RIGHT").should_not == nil
         bot.command("REPORT").should == "0,0,EAST"
       end
 
-      it "turn rightx2 at 0,0,NORTH" do
+      it "should turn right x2 at 0,0,NORTH" do
         bot.command("PLACE 0,0,NORTH").should_not == nil
         bot.command("RIGHT").should_not == nil
         bot.command("RIGHT").should_not == nil
         bot.command("REPORT").should == "0,0,SOUTH"
       end
 
-      it "turn rightx4 at 0,0,NORTH" do
+      it "should turn right x4 at 0,0,NORTH" do
         bot.command("PLACE 0,0,NORTH").should_not == nil
         bot.command("RIGHT").should_not == nil
         bot.command("RIGHT").should_not == nil
@@ -51,20 +53,26 @@ module BillBot1
     end
 
     describe "#turn_left" do
-      it "turn left at 0,0,NORTH" do
+      it "should turn left at 0,0,NORTH" do
         bot.command("PLACE 0,0,NORTH").should_not == nil
         bot.command("LEFT").should_not == nil
         bot.command("REPORT").should == "0,0,WEST"
       end
 
-      it "turn leftx2 at 0,0,NORTH" do
+      it "should turn left at 2,2,EAST" do
+        bot.command("PLACE 2,2,EAST").should_not == nil
+        bot.command("LEFT").should_not == nil
+        bot.command("REPORT").should == "2,2,NORTH"
+      end
+
+      it "should turn leftx2 at 0,0,NORTH" do
         bot.command("PLACE 0,0,NORTH").should_not == nil
         bot.command("LEFT").should_not == nil
         bot.command("LEFT").should_not == nil
         bot.command("REPORT").should == "0,0,SOUTH"
       end
 
-      it "turn leftx4 at 0,0,NORTH" do
+      it "should turn leftx4 at 0,0,NORTH" do
         bot.command("PLACE 0,0,NORTH").should_not == nil
         bot.command("LEFT").should_not == nil
         bot.command("LEFT").should_not == nil

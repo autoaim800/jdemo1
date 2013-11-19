@@ -4,25 +4,25 @@ Feature: toy robot report
   command report should not be nil after place
 
   Scenario: ignore report prior place
-    Given a table width 5
-    Then try to report
+    Given I have a table width 5
+    Then I try to report
 
   Scenario: ignore report prior place with move
-    Given a table width 5
+    Given I have a table width 5
     And try to move
-    Then try to report
+    Then I try to report
 
-  Scenario: ignore report prior place with turn right
-    Given a table width 5
-    And try to turn right
-    Then try to report
+  Scenario: ignore report prior place with I command turn right
+    Given I have a table width 5
+    And I try to turn right
+    Then I try to report
 
   Scenario: ignore report prior place with turn left
-    Given a table width 5
-    And try to turn left
-    Then try to report
+    Given I have a table width 5
+    And I try to turn left
+    Then I try to report
 
   Scenario: ignore report prior place
-    Given a table width 5
-    And place at "0,0,NORTH"
+    Given I have a table width 5
+    And I place robot at "0,0,NORTH"
     Then manage to report

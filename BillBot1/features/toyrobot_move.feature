@@ -5,35 +5,35 @@ Feature: move toy robot
   should be able to ignore move at boundary
 
   Scenario: ignore move prior placed
-    Given a table width 5
+    Given I have a table width 5
     When try to move
-    Then try to report
+    Then I try to report
 
   Scenario: move after placed
-    Given a table width 5
-    And place at "0,0,NORTH"
+    Given I have a table width 5
+    And I place robot at "0,0,NORTH"
     When manage to move
-    Then report as "0,1,NORTH"
+    Then Robot should report as "0,1,NORTH"
 
   Scenario: move after placed and turn left
-    Given a table width 5
-    And place at "2,2,NORTH"
+    Given I have a table width 5
+    And I place robot at "2,2,NORTH"
     When manage to move
-    And turn left
-    Then report as "2,3,WEST"
+    And I command turn left
+    Then Robot should report as "2,3,WEST"
 
-  Scenario: move after placed and turn right
-    Given a table width 5
-    And place at "2,2,NORTH"
+  Scenario: move after placed and I command turn right
+    Given I have a table width 5
+    And I place robot at "2,2,NORTH"
     When manage to move
-    And turn right
-    Then report as "2,3,EAST"
+    And I command turn right
+    Then Robot should report as "2,3,EAST"
 
   Scenario Outline: place at nnN then move
-    Given a table width 5
-    When place at "<position1>"
+    Given I have a table width 5
+    When I place robot at "<position1>"
     And manage to move
-    Then report as "<position2>"
+    Then Robot should report as "<position2>"
     Examples: all valid position
       | position1 | position2 |
       | 0,0,EAST | 1,0,EAST |
@@ -119,10 +119,10 @@ Feature: move toy robot
 
 
   Scenario Outline: ignore move at/towards boundary
-    Given a table width 5
-    When place at "<position>"
+    Given I have a table width 5
+    When I place robot at "<position>"
     And try to move
-    Then report as "<position>"
+    Then Robot should report as "<position>"
     Examples: all boundary position
       | position |
       | 4,0,EAST |
