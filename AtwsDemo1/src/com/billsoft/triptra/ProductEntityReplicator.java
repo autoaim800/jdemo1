@@ -3,6 +3,7 @@ package com.billsoft.triptra;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
@@ -18,6 +19,7 @@ import com.billsoft.triptra.xsd.getproduct.Product_distribution_type0;
 import com.billsoft.triptra.xsd.getproduct.Product_service_type0;
 import com.billsoft.triptra.xsd.getproduct.Row_type29;
 import com.billsoft.triptra.xsd.getproduct.Row_type5;
+import com.billsoft.triptra.xsd.getproduct.Row_type64;
 
 /**
  * this class is for direct service call of getProduct
@@ -25,16 +27,46 @@ import com.billsoft.triptra.xsd.getproduct.Row_type5;
  * @author bill
  * 
  */
-public class SingleProductReplicator extends PageReplicator {
+public class ProductEntityReplicator extends PageReplicator {
+    
+    private static int insertProductDistribution(Connection conn, int prodId) {
+        String cmd = String.format("insert into t_product_distribution(product_id) values (%s)",
+                prodId);
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            return stmt.executeUpdate(cmd);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                // ignored
+            }
+        }
+        return 0;
+    }
 
     /**
      * @param args
      */
     public static void main(String[] args) {
+        
         Connection conn = DbHelper.obtainConnection();
 
         // 9002472, 9036130 multimedia duplication
-        SingleProductReplicator spr = new SingleProductReplicator(Const.DIST_KEY, conn, 9036130);
+        // 9183365 journey_route?
+        // 9074570 video_id? from its/service
+        // 9036809 t3_service_external_system issue
+        // 9011801 null service-distribution
+        
+        
+
+        insertProductDistribution(conn, 9036809);
+        
+        ProductEntityReplicator spr = new ProductEntityReplicator(Const.DIST_KEY, conn, 9036809);
         spr.replicate();
 
         try {
@@ -44,20 +76,20 @@ public class SingleProductReplicator extends PageReplicator {
         }
     }
 
-    private int mProductId;
+    private int productId;
 
-    public SingleProductReplicator(String distKey) {
+    public ProductEntityReplicator(String distKey) {
         this(distKey, null, 0);
     }
 
-    public SingleProductReplicator(String distKey, Connection conn) {
+    public ProductEntityReplicator(String distKey, Connection conn) {
         this(distKey, conn, 0);
     }
 
-    public SingleProductReplicator(String distKey, Connection conn, int _productId) {
+    public ProductEntityReplicator(String distKey, Connection conn, int _productId) {
         super(distKey, conn);
 
-        mProductId = _productId;
+        productId = _productId;
     }
 
     private void insertProductAddress(Product_address_type0 productAddress) {
@@ -67,13 +99,7 @@ public class SingleProductReplicator extends PageReplicator {
 
             for (Row_type5 row : productAddress.getRow()) {
 
-                GpAddress.insert(conn, mProductId, row.getProduct_address_area_relationship());
-                GpAddress.insert(conn, mProductId,
-                        row.getProduct_address_street_directory_relationship());
-                GpAddress.insert(conn, mProductId,
-                        row.getProduct_address_domestic_region_relationship());
-
-                GpAddress.insert(conn, mProductId, row);
+                GpAddress.insert(conn, productId, row);
             }
         }
     }
@@ -91,7 +117,7 @@ public class SingleProductReplicator extends PageReplicator {
             afrc += GpContact.insert(conn, row.getProduct_contact_communication_relationship());
             afrc += GpContact.insert(conn, row.getProduct_contact_multimedia_relationship());
 
-            afrc += GpContact.insert(conn, mProductId, row);
+            afrc += GpContact.insert(conn, productId, row);
 
         }
         return afrc;
@@ -102,16 +128,15 @@ public class SingleProductReplicator extends PageReplicator {
             return;
         }
 
-        // TODO not finish
-        // for (Row_type64 svc : service.getRow()) {
-        // ProductServiceReplicator psp = new
-        // ProductServiceReplicator(this.mKey, mConn,
-        // mProductId, svc.getService_id());
-        // psp.replicate();
-        // }
+        // sub product-service (t3)
+        for (Row_type64 svc : service.getRow()) {
+            ProductServiceReplicator psp = new ProductServiceReplicator(key, conn, productId,
+                    svc.getService_id());
+            psp.replicate();
+        }
 
-        // insert level-1 service
-        GpService.insert(conn, mProductId, service);
+        // insert t2 service
+        GpService.insert(conn, productId, service);
 
     }
 
@@ -122,30 +147,30 @@ public class SingleProductReplicator extends PageReplicator {
         Product_distribution_type0 dist = result.getProduct_distribution();
 
         int _prodId = dist.getProduct_id();
-        if (mProductId > 0 && _prodId != mProductId) {
-            logger.error(String.format("productId %d <> %d", _prodId, mProductId));
+        if (productId > 0 && _prodId != productId) {
+            logger.error(String.format("productId %d <> %d", _prodId, productId));
         } else {
-            mProductId = _prodId;
+            productId = _prodId;
         }
 
         insertProductAddress(dist.getProduct_address());
         insertProductContact(dist.getProduct_contact());
         insertProductService(dist.getProduct_service());
 
-        GpAddress.insert(conn, mProductId, dist.getProduct_record());
-        GpInserter.insert(conn, mProductId, dist.getProduct_multimedia());
-        GpInserter.insert(conn, mProductId, dist.getProduct_open_time());
+        GpAddress.insert(conn, productId, dist.getProduct_record());
+        GpInserter.insert(conn, productId, dist.getProduct_multimedia());
+        GpInserter.insert(conn, productId, dist.getProduct_open_time());
 
-        GpInserter.insert(conn, mProductId, dist.getProduct_article());
-        GpInserter.insert(conn, mProductId, dist.getProduct_entry_cost());
-        GpInserter.insert(conn, mProductId, dist.getProduct_article());
+        GpInserter.insert(conn, productId, dist.getProduct_article());
+        GpInserter.insert(conn, productId, dist.getProduct_entry_cost());
+        GpInserter.insert(conn, productId, dist.getProduct_article());
 
-        GpInserter.insert(conn, mProductId, dist.getProduct_proximity());
-        GpInserter.insert(conn, mProductId, dist.getProduct_licence());
-        GpInserter.insert(conn, mProductId, dist.getProduct_sponsor());
+        GpInserter.insert(conn, productId, dist.getProduct_proximity());
+        GpInserter.insert(conn, productId, dist.getProduct_licence());
+        GpInserter.insert(conn, productId, dist.getProduct_sponsor());
 
-        GpInserter.insert(conn, mProductId, dist.getProduct_communication());
-        GpInserter.insert(conn, mProductId, dist.getProduct_name());
+        GpInserter.insert(conn, productId, dist.getProduct_communication());
+        GpInserter.insert(conn, productId, dist.getProduct_name());
         GpInserter.insert(conn, _prodId, dist.getProduct_attribute());
 
         GpInserter.insert(conn, _prodId, dist.getProduct_related_service());
@@ -160,9 +185,10 @@ public class SingleProductReplicator extends PageReplicator {
      */
     public boolean replicate() {
 
-        GetProduct gp = new GetProduct(key, String.valueOf(mProductId));
+        GetProduct gp = new GetProduct(key, String.valueOf(productId));
 
-        String fp = String.format("out/%s.xml", mProductId);
+        String fp = String.format("out/product/%s.xml", productId);
+
         boolean needWriteFile = false;
 
         needWriteFile = true;
@@ -182,14 +208,14 @@ public class SingleProductReplicator extends PageReplicator {
             long t2 = System.currentTimeMillis();
 
             if (null == prodResult) {
-                Const.logger.error("null result retrieved for product: " + this.mProductId);
+                Const.logger.error("null result retrieved for product: " + this.productId);
             } else {
                 procResult(prodResult);
-                
+
                 ret = true;
             }
-            long t3 = System.currentTimeMillis();
-            xmlTime = t3 - t2;
+
+            xmlTime = System.currentTimeMillis() - t2;
             netTime = t2 - t1;
 
         } catch (Exception e) {
@@ -198,11 +224,11 @@ public class SingleProductReplicator extends PageReplicator {
         }
 
         if (needWriteFile) {
-            writef(fp, gp.getRaw());
+            writef(fp, pretty(gp.getRaw()));
         }
 
-        Const.logger.info(String.format("product: %s:%s, net-time: %s, xml-proc-time: %s",
-                mProductId, ret, netTime, xmlTime));
+        Const.logger.info(String.format(" product:%s result:%s net-time:%s xml-proc-time:%s",
+                productId, ret, netTime, xmlTime));
         return ret;
     }
 }

@@ -31,6 +31,7 @@ class DdlToSql:
     
     def toJava(self):
         tpl = """
+        if (null == param || null == param.getRow()){ return 0; }
         String cmd = "insert into """  +self.tabltName + """ (%s) values (%s)";
         PreparedStatement pstmt;
         try {
@@ -42,12 +43,12 @@ class DdlToSql:
         }
         int afrc = 0;
         
-        for(obj:){
+        for(SomeType obj:param.getRow()){
             try{
             
             %s
             
-            afrc += pstmt.executeUpdate();
+            afrc += pstmt.executeUpdate();pstmt.clearParameters();
             
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
@@ -69,7 +70,13 @@ class DdlToSql:
             vals += "?, "           
             
             if fieldType.startswith("integer"):
-                binds += "nullOrInt(pstmt, %s, obj.get%s());\n" % (count, self.cap1word(name))
+                if name == "service_id":
+                    rep = "serviceId"
+                elif name == "product_id":
+                    rep = "productId"
+                else:
+                    rep = "obj.get%s()" % (self.cap1word(name))
+                binds += "nullOrInt(pstmt, %s, %s);\n" % (count, rep)
             elif fieldType.startswith("bit"):
                 binds += "nullOrBoolean(pstmt, %s, obj.get%s());\n" % (count, self.cap1word(name))
             elif fieldType.startswith("date"):

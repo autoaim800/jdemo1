@@ -18,6 +18,8 @@ import com.billsoft.triptra.xsd.getproductservice.Row_type13;
 import com.billsoft.triptra.xsd.getproductservice.Row_type14;
 import com.billsoft.triptra.xsd.getproductservice.Row_type15;
 import com.billsoft.triptra.xsd.getproductservice.Row_type16;
+import com.billsoft.triptra.xsd.getproductservice.Row_type17;
+import com.billsoft.triptra.xsd.getproductservice.Row_type18;
 import com.billsoft.triptra.xsd.getproductservice.Row_type19;
 import com.billsoft.triptra.xsd.getproductservice.Row_type2;
 import com.billsoft.triptra.xsd.getproductservice.Row_type20;
@@ -41,6 +43,7 @@ import com.billsoft.triptra.xsd.getproductservice.Service_departure_time_relatio
 import com.billsoft.triptra.xsd.getproductservice.Service_external_system_type0;
 import com.billsoft.triptra.xsd.getproductservice.Service_indicative_adult_rate_type0;
 import com.billsoft.triptra.xsd.getproductservice.Service_indicative_child_rate_type0;
+import com.billsoft.triptra.xsd.getproductservice.Service_make_model_style_attr_relationship_type0;
 import com.billsoft.triptra.xsd.getproductservice.Service_make_model_style_type0;
 import com.billsoft.triptra.xsd.getproductservice.Service_minimum_period_type0;
 import com.billsoft.triptra.xsd.getproductservice.Service_multimedia_type0;
@@ -265,7 +268,7 @@ public class GpsInserter extends DbInserter {
         if (null == param || null == param.getRow()) {
             return 0;
         }
-        String cmd = "insert into t3_service_external_system{ (external_system_code, service_id, product_id, external_system_text) values (?, ?, ?, ?)";
+        String cmd = "insert into t3_service_external_system (external_system_code, service_id, product_id, external_system_text) values (?, ?, ?, ?)";
         PreparedStatement pstmt;
         try {
             pstmt = conn.prepareStatement(cmd);
@@ -390,9 +393,54 @@ public class GpsInserter extends DbInserter {
 
     }
 
-    public static void insert(Connection conn, int productId, int serviceId,
-            Service_make_model_style_type0 service_make_model_style) {
-        // TODO Auto-generated method stub
+    public static int insert(Connection conn, int productId, int serviceId,
+            Service_make_model_style_type0 param) {
+
+        if (null == param || null == param.getRow()) {
+            return 0;
+        }
+        String cmd = "insert into t3_service_make_model_style (style, product_id, make, service_id, model, hire_capacity) values (?, ?, ?, ?, ?, ?)";
+        PreparedStatement pstmt;
+        try {
+            pstmt = conn.prepareStatement(cmd, Statement.RETURN_GENERATED_KEYS);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 0;
+        }
+        int afrc = 0;
+
+        for (Row_type18 obj : param.getRow()) {
+            try {
+
+                nullOrString(pstmt, 1, obj.getStyle());
+                nullOrInt(pstmt, 2, productId);
+                nullOrString(pstmt, 3, obj.getMake());
+                nullOrInt(pstmt, 4, serviceId);
+                nullOrString(pstmt, 5, obj.getModel());
+                nullOrInt(pstmt, 6, obj.getHire_capacity());
+
+                afrc += pstmt.executeUpdate();
+
+                int agi = queryAgi(pstmt);
+
+                if (agi > 0) {
+                    insertMakeModelStyleRel(conn, productId, serviceId, agi,
+                            obj.getService_make_model_style_attr_relationship());
+                } else {
+                    String tpl = "product: %s service: %s no found generated key for: service_make_model_style";
+                    Const.logger.error(String.format(tpl, productId, serviceId));
+                }
+
+                pstmt.clearParameters();
+
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return afrc;
     }
 
     public static int insert(Connection conn, int productId, int serviceId,
@@ -490,8 +538,13 @@ public class GpsInserter extends DbInserter {
                 pstmt.clearParameters();
 
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                if (Const.SQL_DUPLICATE == e.getErrorCode()) {
+                    String tpl = "product:%S service:%s duplicate multimedia";
+                    Const.logger.error(String.format(tpl, productId, serviceId));
+                } else {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -1118,6 +1171,48 @@ public class GpsInserter extends DbInserter {
                 nullOrInt(pstmt, 15, obj.getFriday_depart_time());
                 nullOrInt(pstmt, 16, obj.getTuesday_depart_time());
                 nullOrInt(pstmt, 17, productId);
+
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
+
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return afrc;
+
+    }
+
+    private static int insertMakeModelStyleRel(Connection conn, int productId, int serviceId,
+            int makeModelStyleId, Service_make_model_style_attr_relationship_type0 param) {
+
+        if (null == param || null == param.getRow()) {
+            return 0;
+        }
+        String cmd = "insert into t3_service_make_model_style_attr_relationship (attribute_id_description_mv, product_id, attribute_id_description, attribute_type_id, attribute_id, service_id, attribute_text, make_model_style_id) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement pstmt;
+        try {
+            pstmt = conn.prepareStatement(cmd);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 0;
+        }
+        int afrc = 0;
+
+        for (Row_type17 obj : param.getRow()) {
+            try {
+
+                nullOrString(pstmt, 1, obj.getAttribute_id_description_mv());
+                nullOrInt(pstmt, 2, productId);
+                nullOrString(pstmt, 3, obj.getAttribute_id_description());
+                nullOrString(pstmt, 4, obj.getAttribute_type_id());
+                nullOrString(pstmt, 5, obj.getAttribute_id());
+                nullOrInt(pstmt, 6, serviceId);
+                nullOrString(pstmt, 7, obj.getAttribute_text());
+                nullOrInt(pstmt, 8, makeModelStyleId);
 
                 afrc += pstmt.executeUpdate();
                 pstmt.clearParameters();

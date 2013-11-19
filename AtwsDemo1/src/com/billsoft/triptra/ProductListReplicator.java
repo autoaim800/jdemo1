@@ -3,6 +3,7 @@ package com.billsoft.triptra;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
@@ -17,7 +18,7 @@ import com.billsoft.triptra.xsd.queryproducts.Product_distribution_type0;
  * @author bill
  * 
  */
-public class ListProductReplicator extends PageReplicator {
+public class ProductListReplicator extends PageReplicator {
 
     /**
      * @param args
@@ -26,7 +27,7 @@ public class ListProductReplicator extends PageReplicator {
 
         Connection cnn = DbHelper.obtainConnection();
 
-        ListProductReplicator fr = new ListProductReplicator(Const.DIST_KEY, cnn);
+        ProductListReplicator fr = new ProductListReplicator(Const.DIST_KEY, cnn);
         fr.replicate();
 
         try {
@@ -36,7 +37,7 @@ public class ListProductReplicator extends PageReplicator {
         }
     }
 
-    public ListProductReplicator(String distKey, Connection conn) {
+    public ProductListReplicator(String distKey, Connection conn) {
         super(distKey, conn);
     }
 
@@ -54,7 +55,9 @@ public class ListProductReplicator extends PageReplicator {
 
                 int prodId = dist.getProduct_id();
 
-                SingleProductReplicator spr = new SingleProductReplicator(key, conn, prodId);
+                insertProductDistribution(prodId);
+
+                ProductEntityReplicator spr = new ProductEntityReplicator(key, conn, prodId);
                 spr.replicate();
 
                 conn.commit();
@@ -69,11 +72,31 @@ public class ListProductReplicator extends PageReplicator {
 
     }
 
+    private int insertProductDistribution(int prodId) {
+        String cmd = String.format("insert into t_product_distribution(product_id) values (%s)",
+                prodId);
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            return stmt.executeUpdate(cmd);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                // ignored
+            }
+        }
+        return 0;
+    }
+
     private void queryProducts() {
         int perPage = 50;
         int pageNum = 1;
 
-        String fp = "out/page" + pageNum + ".xml";
+        String fp = buildPageFp(pageNum);
         File file = new File(fp);
 
         QueryProducts qp = new QueryProducts(key, "ALL");
@@ -94,7 +117,7 @@ public class ListProductReplicator extends PageReplicator {
             String queryId = result.getApi_query_id();
 
             if (needWriteFile) {
-                writef(fp, qp.getRaw());
+                writef(fp, pretty(qp.getRaw()));
             }
 
             dealOnePageOfProducts(result, pageNum);
@@ -119,7 +142,7 @@ public class ListProductReplicator extends PageReplicator {
                         String.valueOf(pageNum));
                 qpn.setResultsPerPage(String.valueOf(perPage));
 
-                String fp = "out/page" + pageNum + ".xml";
+                String fp = buildPageFp(pageNum);
 
                 File file = new File(fp);
                 boolean needWriteFile = true;
@@ -155,6 +178,10 @@ public class ListProductReplicator extends PageReplicator {
             e.printStackTrace();
         }
 
+    }
+
+    private String buildPageFp(int pageNum) {
+        return "out/products/page" + pageNum + ".xml";
     }
 
     /**

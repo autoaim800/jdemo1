@@ -69,7 +69,11 @@ class RarOr7z:
                 os.remove(zfp)
 
 def main():
-    r7 = RarOr7z(sys.argv[1])
+    if len(sys.argv) > 1:
+        wdir = sys.argv[1]
+    else:
+        wdir = os.getcwd()
+    r7 = RarOr7z(wdir)
     r7.compress()
 
 if __name__ == '__main__':

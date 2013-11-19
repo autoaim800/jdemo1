@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.billsoft.triptra.Const;
 import com.billsoft.triptra.inserter.DbInserter;
 import com.billsoft.triptra.xsd.getproduct.Decimal103;
 import com.billsoft.triptra.xsd.getproduct.Decimal154;
@@ -56,7 +57,8 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 2, obj.getArticle_keywords());
                 nullOrString(pstmt, 3, obj.getArticle_description());
                 nullOrInt(pstmt, 4, prodId);
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -94,7 +96,8 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 7, obj.getAttribute_type_id_description());
                 nullOrString(pstmt, 8, obj.getAttribute_text());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
 
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
@@ -137,7 +140,8 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 11, obj.getAttribute_id_coverage());
                 nullOrInt(pstmt, 12, prodId);
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
 
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
@@ -178,7 +182,8 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 9, obj.getAttribute_id_entry_cost());
                 nullOrInt(pstmt, 10, obj.getChild_age_from());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -215,7 +220,8 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 5, obj.getLicence_qualifications());
                 nullOrString(pstmt, 6, obj.getLicence_number());
                 nullOrString(pstmt, 7, obj.getAttribute_id_licence_type_description_mv());
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -272,12 +278,18 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 25, obj.getMultimedia_source());
                 nullOrInt(pstmt, 26, obj.getSequence_number());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
                 pstmt.clearParameters();
-                
+                pstmt.clearParameters();
+
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                if (Const.SQL_DUPLICATE == e.getErrorCode()) {
+                    Const.logger
+                            .error(String.format("product: %s duplicate multimedia", prodId));
+                } else {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         }
         return afrc;
@@ -311,7 +323,8 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 8, obj.getAttribute_id_language_written_description());
                 nullOrString(pstmt, 9, obj.getName_detail());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
 
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
@@ -354,7 +367,8 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 11, obj.getOpen_time_public_holiday());
                 nullOrString(pstmt, 12, obj.getOpen_time_good_friday());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -406,7 +420,8 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 22, obj.getAttribute_id_direction_description());
                 nullOrString(pstmt, 23, obj.getProximity_text());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -442,7 +457,8 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 5, obj.getAttribute_id_relationship_description());
                 nullOrString(pstmt, 6, obj.getAttribute_id_relationship_description_mv());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
 
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
@@ -481,7 +497,8 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 6, obj.getAttribute_id_relationship_description());
                 nullOrString(pstmt, 7, obj.getAttribute_id_relationship_description_mv());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
 
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
@@ -540,7 +557,8 @@ public class GpInserter extends DbInserter {
                 nullOrString(pstmt, 26, obj.getMultimedia_source());
                 nullOrInt(pstmt, 27, obj.getSequence_number());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

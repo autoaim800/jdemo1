@@ -70,7 +70,10 @@ class XsdParser2:
         tree = lxml.etree.parse(fp)
         self.elements = dict()
         self.simpleTypes = dict()
+
+        self.elementPool = dict()
         self.typePool = dict()
+
         self.root = tree.getroot()
 
     def _buildTab(self, level):
@@ -117,6 +120,17 @@ class XsdParser2:
 
         return pending
 
+
+    def __extractSequence(self, seqNode):
+        rowNodes = seqNode.getchildren()
+
+        if len(rowNodes) > 1:
+            error("sequence-node has more than one row-node")
+            return None
+
+        rowNode = rowNodes[0]
+
+
     def __buildComplexType(self, node, el):
         if None == el:
             return None
@@ -129,17 +143,17 @@ class XsdParser2:
                 el.appendAttr(myattr.name, myattr)
             elif "sequence" == tagName:
                 eles = self.__extractDirectElements(child)
+                if len(eles) == 1 and eles[0].name == "row":
+                    eles = self.__extractDirectElements(child.getchildren()[0].getchildren()[0].getchildren()[0])
                 for element in eles:
                     el.appendElement(element.name, element)
             else:
                 info("unknown node: %s" % (tagName))
         return el
 
-
     def __buildSimpleType(self, child, el):
         info("__buildSimpleType()")
         return el
-
 
     def printElement(self, el):
         buf = "\n%s{" % (el.name)
@@ -152,26 +166,63 @@ class XsdParser2:
 
         for attrName in el.primitiveFields:
             attr = el.primitiveFields[attrName]
-            buf += "\n    attr=%s type=%s use=%s" % (attr.name, attr.type, attr.use)
+            buf += "\n    %s \t %s use=%s," % (attr.name, attr.type, attr.use)
 
         for eleName in el.customFields:
             ele = el.customFields[eleName]
-            buf += "\n    elem=%s min=%s max=%s" % (ele.name, ele.minO, ele.maxO)
+            if eleName in self.typePool:
+                eleType = self.typePool[eleName].baseType
+            elif eleName in self.elements:
+                eleType = self.elementPool[eleName].type
+                if None == eleType:
+                    eleType = self.elementPool[eleName].customFields.keys()
+            else:
+                eleType = "na"
+                
+            if eleType == "xs:integer" or eleType == "xs:int":
+                buf += "\n    %s \t integer, " % (ele.name)
+            elif eleType == "xs:boolean":
+                buf += "\n    %s \t bit," % (ele.name)
+            elif eleType == "string-3":
+                buf += "\n    %s \t varchar(3)," % (ele.name)
+            elif eleType == "string-10":
+                buf += "\n    %s \t varchar(10)," % (ele.name)
+            elif eleType == "string-20":
+                buf += "\n    %s \t varchar(20)," % (ele.name)
+            elif eleType == "string-80":
+                buf += "\n    %s \t varchar(80)," % (ele.name)
+            elif eleType == "string-100":
+                buf += "\n    %s \t varchar(100)," % (ele.name)
+            elif eleType == "string-256" or eleType == "xs:string":
+                buf += "\n    %s \t text," % (ele.name)
+            elif eleType == "decimal-12-9":
+                buf += "\n    %s \t decimal(12, 9)," % (ele.name)
+            elif eleType == "decimal-10-3":
+                buf += "\n    %s \t decimal(10, 3)," % (ele.name)
+            elif eleType == "decimal-15-4":
+                buf += "\n    %s \t decimal(15, 4)," % (ele.name)
+            elif eleType == "xs:date":
+                buf += "\n    %s \t date," % (ele.name)
+            elif eleType == "string-1024" or eleType == "string-8192":
+                buf += "\n    %s \t text," % (ele.name)
+            else:
+                buf += "\n    %s \t min=%s max=%s %s" % \
+                    (ele.name, ele.minO, ele.maxO, eleType)
 
         buf += "\n}"
         print(buf)
 
 
-    def procElement(self, element):
+    def parseElement(self, elementNode):
 
-        name = element.get("name")
-        mino = element.get("minOccurs")
-        maxo = element.get("maxOccurs")
-        etype = element.get("type")
+        name = elementNode.get("name")
+        mino = elementNode.get("minOccurs")
+        maxo = elementNode.get("maxOccurs")
+        etype = elementNode.get("type")
 
         el = MyElement(name, mino, maxo, etype)
 
-        children = element.getchildren()
+        children = elementNode.getchildren()
 
         if len(children) > 0:
             for child in children:
@@ -187,12 +238,13 @@ class XsdParser2:
 
                 else:
                     print("unknown tag: %s" % (tagName))
-        # else: info ("element:%s has no child" % (name))
+        # else: info ("elementNode:%s has no child" % (name))
 
         if None == el:
-            print("None element: %s" % (name))
+            error("None elementNode: %s" % (name))
+            return None
         else:
-            self.printElement(el)
+            return el
 
     def __scanSimpleType(self, node):
         if lxml.etree.Comment == node.tag:
@@ -210,8 +262,8 @@ class XsdParser2:
                     continue
                 else:
                     self.simpleTypes[name] = child
-            self.__scanSimpleType(child)
 
+            self.__scanSimpleType(child)
 
     def __extractSimpleTypeMaxLength(self, node):
         for child in node:
@@ -242,6 +294,7 @@ class XsdParser2:
     def proc(self):
         # round 1, scan for element
         self.__scanSimpleType(self.root)
+
         self.__scanElement(self.root)
         # process all simple-types
         for key in self.simpleTypes:
@@ -249,9 +302,15 @@ class XsdParser2:
             mySimpleType = self.__buildMySimpleType(node)
             self.typePool[key] = mySimpleType
         # process all element
-        for key in sorted(self.elements.keys()):
+        for key in self.elements:
             element = self.elements[key]
-            self.procElement(element)
+            el = self.parseElement(element)
+            self.elementPool[key] = el
+
+        for key in sorted(self.elements.keys()):
+            el = self.elementPool[key]
+            self.printElement(el)
+
 
 def main():
     xp = XsdParser2(sys.argv[1])

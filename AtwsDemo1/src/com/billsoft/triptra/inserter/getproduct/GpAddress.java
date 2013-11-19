@@ -3,7 +3,9 @@ package com.billsoft.triptra.inserter.getproduct;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
+import com.billsoft.triptra.Const;
 import com.billsoft.triptra.inserter.DbInserter;
 import com.billsoft.triptra.xsd.getproduct.Decimal103;
 import com.billsoft.triptra.xsd.getproduct.Decimal129;
@@ -27,7 +29,7 @@ public class GpAddress extends DbInserter {
         String cmd = "insert into t2_product_address (state_name, attribute_id_geocode_proj_sys_description, attribute_id_address_description_mv, override_domestic_region_flag, geocode_gda_longitude, geocode_amg_north, country_name, geocode_gda_latitude, area_name, attribute_id_address, attribute_id_address_description, same_postal_address_flag, city_name, address_line_4, suburb_name, product_id, attribute_id_geocode_proj_sys_description_mv, address_lot_plan, geocode_amg_zone, address_postal_code, geocode_amg_east, attribute_id_geocode_proj_sys, address_line_2, address_line_3, address_line_1) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pstmt;
         try {
-            pstmt = conn.prepareStatement(cmd);
+            pstmt = conn.prepareStatement(cmd, Statement.RETURN_GENERATED_KEYS);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -64,6 +66,20 @@ public class GpAddress extends DbInserter {
 
             afrc = pstmt.executeUpdate();
 
+            int agi = queryAgi(pstmt);
+
+            if (agi > 0) {
+                insertProductAddressAreaRel(conn, prodId, agi,
+                        obj.getProduct_address_area_relationship());
+                insertProductAddressStreetDirectoryRel(conn, prodId, agi,
+                        obj.getProduct_address_street_directory_relationship());
+                insertProductAddressDomesticRegionRel(conn, prodId, agi,
+                        obj.getProduct_address_domestic_region_relationship());
+            } else {
+                String tpl = "product: %s no found generated key for: product_address";
+                Const.logger.error(String.format(tpl, prodId));
+            }
+
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -71,35 +87,36 @@ public class GpAddress extends DbInserter {
         return afrc;
     }
 
-    public static int insert(Connection conn, int productId,
-            Product_address_area_relationship_type0 obj) {
-        if (null == obj || null == obj.getRow()) {
+    private static int insertProductAddressAreaRel(Connection conn, int productId,
+            int productAddressId, Product_address_area_relationship_type0 param) {
+
+        if (null == param || null == param.getRow()) {
             return 0;
         }
-
-        int afrc = 0;
-
-        String cmd = "insert into t2_product_address_area_relationship (area_name, product_id, area_type) values (?, ?, ?)";
-
+        String cmd = "insert into t2_product_address_area_relationship (area_name, product_address_id, product_id, area_type) values (?, ?, ?, ?)";
         PreparedStatement pstmt;
         try {
             pstmt = conn.prepareStatement(cmd);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 0;
+        }
+        int afrc = 0;
 
-            for (Row_type4 row : obj.getRow()) {
+        for (Row_type4 obj : param.getRow()) {
+            try {
 
-                nullOrString(pstmt, 1, row.getArea_name());
-                nullOrInt(pstmt, 2, productId);
-                nullOrString(pstmt, 3, row.getArea_type());
+                nullOrString(pstmt, 1, obj.getArea_name());
+                nullOrInt(pstmt, 2, productAddressId);
+                nullOrInt(pstmt, 3, productId);
+                nullOrString(pstmt, 4, obj.getArea_type());
 
                 afrc += pstmt.executeUpdate();
                 pstmt.clearParameters();
 
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            if (1062 == e.getErrorCode()) {
-                // do nothing
-            } else {
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -108,78 +125,83 @@ public class GpAddress extends DbInserter {
 
     }
 
-    public static int insert(Connection conn, int productId,
-            Product_address_domestic_region_relationship_type0 obj) {
+    private static int insertProductAddressDomesticRegionRel(Connection conn, int productId,
+            int productAddressId, Product_address_domestic_region_relationship_type0 param) {
 
-        if (null == obj || null == obj.getRow()) {
+        if (null == param || null == param.getRow()) {
             return 0;
         }
-
-        int afrc = 0;
-
-        String cmd = "insert into t2_product_address_domestic_region_relationship (domestic_region_type, product_id, domestic_region_name) values (?, ?, ?)";
+        String cmd = "insert into t2_product_address_domestic_region_relationship (domestic_region_code, domestic_region_type, product_address_id, product_id, domestic_region_name) values (?, ?, ?, ?, ?)";
         PreparedStatement pstmt;
         try {
             pstmt = conn.prepareStatement(cmd);
-            for (Row_type3 row : obj.getRow()) {
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 0;
+        }
+        int afrc = 0;
 
-                nullOrString(pstmt, 1, row.getDomestic_region_type());
-                nullOrInt(pstmt, 2, productId);
-                nullOrString(pstmt, 3, row.getDomestic_region_name());
+        for (Row_type3 obj : param.getRow()) {
+            try {
+
+                nullOrString(pstmt, 1, obj.getDomestic_region_code());
+                nullOrString(pstmt, 2, obj.getDomestic_region_type());
+                nullOrInt(pstmt, 3, productAddressId);
+                nullOrInt(pstmt, 4, productId);
+                nullOrString(pstmt, 5, obj.getDomestic_region_name());
 
                 afrc += pstmt.executeUpdate();
                 pstmt.clearParameters();
 
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            // Const.logger.error("error code=" + e.getErrorCode());
-            if (1062 == e.getErrorCode()) {
-                // do nothing
-            } else {
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
 
         return afrc;
+
     }
 
-    public static int insert(Connection conn, int prodId,
-            Product_address_street_directory_relationship_type0 obj) {
-        if (null == obj || null == obj.getRow()) {
+    private static int insertProductAddressStreetDirectoryRel(Connection conn, int productId,
+            int productAddressId, Product_address_street_directory_relationship_type0 param) {
+
+        if (null == param || null == param.getRow()) {
             return 0;
         }
-
-        int afrc = 0;
-
-        String cmd = "insert into t2_product_address_street_directory_relationship (attribute_id_street_directory_description, attribute_id_street_directory_description_mv, attribute_id_street_directory, product_id, street_directory_reference) values (?, ?, ?, ?, ?)";
-
+        String cmd = "insert into t2_product_address_street_directory_relationship (attribute_id_street_directory_description, product_id, product_address_id, street_directory_reference, attribute_id_street_directory_description_mv, attribute_id_street_directory) values (?, ?, ?, ?, ?, ?)";
         PreparedStatement pstmt;
         try {
             pstmt = conn.prepareStatement(cmd);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 0;
+        }
+        int afrc = 0;
 
-            for (Row_type2 row : obj.getRow()) {
+        for (Row_type2 obj : param.getRow()) {
+            try {
 
-                nullOrString(pstmt, 1, row.getAttribute_id_street_directory_description());
-                nullOrString(pstmt, 2, row.getAttribute_id_street_directory_description_mv());
-                nullOrString(pstmt, 3, row.getAttribute_id_street_directory());
-                nullOrInt(pstmt, 4, prodId);
-                nullOrString(pstmt, 5, row.getStreet_directory_reference());
+                nullOrString(pstmt, 1, obj.getAttribute_id_street_directory_description());
+                nullOrInt(pstmt, 2, productId);
+                nullOrInt(pstmt, 3, productAddressId);
+                nullOrString(pstmt, 4, obj.getStreet_directory_reference());
+                nullOrString(pstmt, 5, obj.getAttribute_id_street_directory_description_mv());
+                nullOrString(pstmt, 6, obj.getAttribute_id_street_directory());
 
                 afrc += pstmt.executeUpdate();
                 pstmt.clearParameters();
 
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            if (1062 == e.getErrorCode()) {
-                // do nothing
-            } else {
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
 
         return afrc;
+
     }
 
     public static int insert(Connection conn, int productId, Product_record_type0 obj) {

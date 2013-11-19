@@ -3,6 +3,7 @@ package com.billsoft.triptra.inserter.getproduct;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.billsoft.triptra.Const;
 import com.billsoft.triptra.xsd.getproduct.Product_service_configuration_relationship_type0;
@@ -14,12 +15,13 @@ import com.billsoft.triptra.xsd.getproduct.Row_type64;
 
 public class GpService extends GpInserter {
 
-    private static int insert(Connection conn, int prodId, int svcId,
-            Product_service_configuration_relationship_type0 conf) {
-        if (null == conf || null == conf.getRow()) {
+    private static int insertServiceConfigurationRel(Connection conn, int productId, int svcId,
+            int agi, Product_service_configuration_relationship_type0 param) {
+
+        if (null == param || null == param.getRow()) {
             return 0;
         }
-        String cmd = "insert into t2_product_service_configuration_relationship (product_id, minimum_capacity, attribute_id_service_config_definition, attribute_id_service_config, maximum_capacity, service_id, attribute_id_service_config_description, number_of_services) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        String cmd = "insert into t2_product_service_configuration_relationship (product_id, minimum_capacity, attribute_id_service_config_definition, attribute_id_service_config, maximum_capacity, product_service_id, service_id, attribute_id_service_config_description, number_of_services) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pstmt;
         try {
             pstmt = conn.prepareStatement(cmd);
@@ -29,36 +31,40 @@ public class GpService extends GpInserter {
             return 0;
         }
         int afrc = 0;
-        for (Row_type62 obj : conf.getRow()) {
-            try {
-                nullOrInt(pstmt, 1, prodId);
 
+        for (Row_type62 obj : param.getRow()) {
+            try {
+
+                nullOrInt(pstmt, 1, productId);
                 nullOrInt(pstmt, 2, obj.getMinimum_capacity());
                 nullOrString(pstmt, 3, obj.getAttribute_id_service_config_definition());
                 nullOrString(pstmt, 4, obj.getAttribute_id_service_config());
                 nullOrInt(pstmt, 5, obj.getMaximum_capacity());
-                nullOrInt(pstmt, 6, svcId);
-                nullOrString(pstmt, 7, obj.getAttribute_id_service_config_description());
-                nullOrInt(pstmt, 8, obj.getNumber_of_services());
+                nullOrInt(pstmt, 6, agi);
+                nullOrInt(pstmt, 7, svcId);
+                nullOrString(pstmt, 8, obj.getAttribute_id_service_config_description());
+                nullOrInt(pstmt, 9, obj.getNumber_of_services());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
 
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
+
         return afrc;
+
     }
 
-    private static int insert(Connection conn, int prodId, int svcId,
-            Product_service_external_system_relationship_type0 ext) {
-        if (null == ext || null == ext.getRow()) {
+    private static int insertServiceExternalSystemRel(Connection conn, int productId,
+            int serviceId, int agi, Product_service_external_system_relationship_type0 param) {
+
+        if (null == param || null == param.getRow()) {
             return 0;
         }
-        int afrc = 0;
-
-        String cmd = "insert into t2_product_service_external_system_relationship (service_id, external_system_text, product_id, external_system_code) values (?, ?, ?, ?)";
+        String cmd = "insert into t2_product_service_external_system_relationship (product_service_id, service_id, external_system_text, product_id, external_system_code) values (?, ?, ?, ?, ?)";
         PreparedStatement pstmt;
         try {
             pstmt = conn.prepareStatement(cmd);
@@ -67,15 +73,19 @@ public class GpService extends GpInserter {
             e.printStackTrace();
             return 0;
         }
-        for (Row_type63 obj : ext.getRow()) {
+        int afrc = 0;
+
+        for (Row_type63 obj : param.getRow()) {
             try {
-                nullOrInt(pstmt, 1, svcId);
 
-                nullOrString(pstmt, 2, obj.getExternal_system_text());
-                nullOrInt(pstmt, 3, prodId);
-                nullOrString(pstmt, 4, obj.getExternal_system_code());
+                nullOrInt(pstmt, 1, agi);
+                nullOrInt(pstmt, 2, serviceId);
+                nullOrString(pstmt, 3, obj.getExternal_system_text());
+                nullOrInt(pstmt, 4, productId);
+                nullOrString(pstmt, 5, obj.getExternal_system_code());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
 
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
@@ -84,6 +94,7 @@ public class GpService extends GpInserter {
         }
 
         return afrc;
+
     }
 
     public static int insert(Connection conn, int prodId, Product_service_type0 svc) {
@@ -97,7 +108,7 @@ public class GpService extends GpInserter {
         String cmd = "insert into t2_product_service (rate_to, tariff_code_match, attribute_id_rate_basis, attribute_id_ceiling_height_unit, children_catered_for_text, attribute_id_rate_basis_definition, tour_duration, attribute_id_time_unit_description, room_available_ceiling_height, room_area, room_dimensions, attribute_id_ceiling_height_unit_description, service_name, pets_allowed_flag, international_ready_flag, attribute_id_rate_basis_description, attribute_id_room_shape, rate_from, pickup_available_text, pets_allowed_text, children_catered_for_flag, attribute_id_time_unit, attribute_id_time_unit_description_mv, disabled_access_flag, service_description, rate_comment, disabled_access_text, attribute_id_ceiling_height_unit_description_mv, product_id, pickup_available_flag, attribute_id_room_shape_description, service_id, attribute_id_room_shape_description_mv, sequence_number) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pstmt;
         try {
-            pstmt = conn.prepareStatement(cmd);
+            pstmt = conn.prepareStatement(cmd, Statement.RETURN_GENERATED_KEYS);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -107,10 +118,6 @@ public class GpService extends GpInserter {
         for (Row_type64 obj : svc.getRow()) {
 
             int svcId = obj.getService_id();
-
-            GpService.insert(conn, prodId, svcId, obj.getProduct_service_configuration_relationship());
-            GpService.insert(conn, prodId, svcId,
-                    obj.getProduct_service_external_system_relationship());
 
             try {
                 nullOrFloat(pstmt, 1, obj.getRate_to());
@@ -149,12 +156,26 @@ public class GpService extends GpInserter {
                 nullOrString(pstmt, 33, obj.getAttribute_id_room_shape_description_mv());
                 nullOrInt(pstmt, 34, obj.getSequence_number());
 
-                afrc += pstmt.executeUpdate(); pstmt.clearParameters();
+                afrc += pstmt.executeUpdate();
+
+                int agi = queryAgi(pstmt);
+
+                if (agi > 0) {
+                    insertServiceConfigurationRel(conn, prodId, svcId, agi,
+                            obj.getProduct_service_configuration_relationship());
+                    insertServiceExternalSystemRel(conn, prodId, svcId, agi,
+                            obj.getProduct_service_external_system_relationship());
+                } else {
+                    String tpl = "product: %s service: %s no found generated key for: product_service";
+                    Const.logger.error(String.format(tpl, prodId, svcId));
+                }
+
+                pstmt.clearParameters();
 
             } catch (SQLException e) {
                 if (Const.SQL_DUPLICATE == e.getErrorCode()) {
-                    Const.logger.error(String.format("duplicate service %d of product %s", svcId,
-                            prodId));
+                    Const.logger.error(String.format("product:%s service:%d duplicate service",
+                            prodId, svcId));
                 } else {
                     e.printStackTrace();
                 }

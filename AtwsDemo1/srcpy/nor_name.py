@@ -13,6 +13,7 @@ class NorName:
 
     def __norName(self, raw):
         return raw.replace("'", '').replace(',','.').replace(':','.').replace(' - ','.').replace(' ', '.')\
+            .replace('\n','.')\
             .replace('..', '.').replace('..', '.').replace('..', '.').replace('..', '.')\
             .replace("Oreilly.", "OReilly.")
     
@@ -44,7 +45,11 @@ class NorName:
 
 
 def main():
-    nn = NorName(sys.argv[1])
+    if len(sys.argv) > 1:
+        wdir = sys.argv[1]
+    else:
+        wdir = os.getcwd()
+    nn = NorName(wdir)
     nn.norminalize()
     
 if __name__ == '__main__':
