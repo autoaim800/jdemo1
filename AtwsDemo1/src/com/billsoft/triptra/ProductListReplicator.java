@@ -57,7 +57,7 @@ public class ProductListReplicator extends PageReplicator {
 
                 insertProductDistribution(prodId);
 
-                ProductEntityReplicator spr = new ProductEntityReplicator(key, conn, prodId);
+                ProductEntityReplicator spr = new ProductEntityReplicator(distKey, conn, prodId);
                 spr.replicate();
 
                 conn.commit();
@@ -99,7 +99,7 @@ public class ProductListReplicator extends PageReplicator {
         String fp = buildPageFp(pageNum);
         File file = new File(fp);
 
-        QueryProducts qp = new QueryProducts(key, "ALL");
+        QueryProducts qp = new QueryProducts(distKey, "ALL");
         qp.setResultsPerPage(String.valueOf(perPage));
 
         boolean needWriteFile = true;
@@ -138,7 +138,7 @@ public class ProductListReplicator extends PageReplicator {
 
         try {
             do {
-                QueryProductsNextPage qpn = new QueryProductsNextPage(key, queryId,
+                QueryProductsNextPage qpn = new QueryProductsNextPage(distKey, queryId,
                         String.valueOf(pageNum));
                 qpn.setResultsPerPage(String.valueOf(perPage));
 

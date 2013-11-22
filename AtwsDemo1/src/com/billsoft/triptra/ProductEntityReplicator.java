@@ -130,7 +130,7 @@ public class ProductEntityReplicator extends PageReplicator {
 
         // sub product-service (t3)
         for (Row_type64 svc : service.getRow()) {
-            ProductServiceReplicator psp = new ProductServiceReplicator(key, conn, productId,
+            ProductServiceReplicator psp = new ProductServiceReplicator(distKey, conn, productId,
                     svc.getService_id());
             psp.replicate();
         }
@@ -185,7 +185,7 @@ public class ProductEntityReplicator extends PageReplicator {
      */
     public boolean replicate() {
 
-        GetProduct gp = new GetProduct(key, String.valueOf(productId));
+        GetProduct gp = new GetProduct(distKey, String.valueOf(productId));
 
         String fp = String.format("out/product/%s.xml", productId);
 

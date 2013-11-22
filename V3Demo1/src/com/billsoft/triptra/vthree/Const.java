@@ -10,7 +10,7 @@ public class Const {
     
     public static final Logger logger = Logger.getLogger("com.billsoft.triptra");
     public static final int SQL_DUPLICATE = 1062;
-
+    
     public static Logger getLogger() {
         return logger;
     }

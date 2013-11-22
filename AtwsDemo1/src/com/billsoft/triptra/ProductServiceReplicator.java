@@ -93,7 +93,7 @@ public class ProductServiceReplicator extends PageReplicator {
 
         String fp = buildServiceFilePath();
 
-        GetProductService gps = new GetProductService(key, String.valueOf(productId),
+        GetProductService gps = new GetProductService(distKey, String.valueOf(productId),
                 String.valueOf(serviceId));
 
         File file = new File(fp);

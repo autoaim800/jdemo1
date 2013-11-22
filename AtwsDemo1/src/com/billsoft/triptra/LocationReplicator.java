@@ -75,7 +75,7 @@ public class LocationReplicator extends PageReplicator {
 
     private void procRegionArea() {
 
-        GetDomesticRegionArea rh = new GetDomesticRegionArea(this.key);
+        GetDomesticRegionArea rh = new GetDomesticRegionArea(this.distKey);
         String fp = String.format("out/region_%s.xml", country);
         boolean needWriteFile = true;
         if ((new File(fp)).exists()) {

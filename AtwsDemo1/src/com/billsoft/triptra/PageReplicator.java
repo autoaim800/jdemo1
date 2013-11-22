@@ -6,10 +6,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.sql.Connection;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -21,6 +25,15 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 public abstract class PageReplicator {
+    private XMLInputFactory xfactory;
+
+    protected XMLStreamReader buildXmlStreamReader(String rawStr) throws XMLStreamException {
+        Reader reader = new StringReader(rawStr);
+        if (null == xfactory) {
+            xfactory = XMLInputFactory.newInstance();
+        }
+        return xfactory.createXMLStreamReader(reader);
+    }
 
     public static void pprint(String raw) {
         System.out.println(pretty(raw));
@@ -115,10 +128,10 @@ public abstract class PageReplicator {
 
     protected Connection conn;
 
-    protected String key;
+    protected String distKey;
 
     public PageReplicator(String distKey, Connection connection) {
-        key = distKey;
+        this.distKey = distKey;
         conn = connection;
     }
 

@@ -87,7 +87,6 @@ public class DbInserter {
         } else {
             pstmt.setString(i, object.toString());
         }
-
     }
 
     public static int queryAgi(PreparedStatement pstmt) throws SQLException {
