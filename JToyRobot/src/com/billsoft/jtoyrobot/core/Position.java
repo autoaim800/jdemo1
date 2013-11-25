@@ -8,31 +8,41 @@ package com.billsoft.jtoyrobot.core;
  */
 public class Position {
 
-    private int mX;
-    private int mY;
-    private int mDir;
+	private int mX;
+	private int mY;
+	private int mDir;
 
-    public Position(int axisX, int axisY, int direction) {
-        this.mX = axisX;
-        this.mY = axisY;
-        this.mDir = direction;
-    }
+	public Position(int axisX, int axisY, int direction) {
+		this.mX = axisX;
+		this.mY = axisY;
+		this.mDir = direction;
+	}
 
-    public int getX() {
-        return mX;
-    }
+	public int getX() {
+		return mX;
+	}
 
-    public int getY() {
-        return mY;
-    }
+	public int getY() {
+		return mY;
+	}
 
-    public int getDir() {
-        return mDir;
-    }
+	public int getDir() {
+		return mDir;
+	}
 
-    @Override
-    public String toString() {
-        return String.format("%s,%s,%s", mX, mY, RobotHelper.obtainStrRepr(mDir));
-    }
+	@Override
+	public String toString() {
+		return String.format("%s,%s,%s", mX, mY,
+				RobotHelper.obtainStrRepr(mDir));
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Position) {
+			Position pos = (Position) obj;
+			return pos.getDir() == mDir && pos.getX() == mX && pos.getY() == mY;
+		}
+		return false;
+	}
 
 }

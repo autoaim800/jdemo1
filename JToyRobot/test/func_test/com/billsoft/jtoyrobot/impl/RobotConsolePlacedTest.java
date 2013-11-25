@@ -5,122 +5,134 @@ import com.billsoft.jtoyrobot.core.Position;
 import com.billsoft.jtoyrobot.core.RobotHelper;
 
 /**
- * verify command can be applied to robot
+ * verify commands can be applied to robot when robot is placed
  * 
  * @author bill
  * 
  */
 public class RobotConsolePlacedTest extends PlacedEastTestCase {
 
-    private RobotConsole mCon;
+	private RobotConsole mCon;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        mCon = new RobotConsole(mBot);
-    }
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		mCon = new RobotConsole(mBot);
+	}
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
 
-    public void testCommandLeftPos() {
-        assertTrue(mCon.command(RobotHelper.CMD_LEFT));
-        assertNotNull(mBot.report());
-    }
+	public void testCommandLeftCoordX() {
+		assertTrue(mCon.command(RobotHelper.CMD_LEFT));
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(INIT_X, pos.getX());
+	}
 
-    public void testCommandLeftDir() {
-        assertTrue(mCon.command(RobotHelper.CMD_LEFT));
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(RobotHelper.NORTH, pos.getDir());
-    }
+	public void testCommandLeftCoordY() {
+		assertTrue(mCon.command(RobotHelper.CMD_LEFT));
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(INIT_Y, pos.getY());
+	}
 
-    public void testCommandLeftCoordX() {
-        assertTrue(mCon.command(RobotHelper.CMD_LEFT));
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(INIT_X, pos.getX());
-    }
+	public void testCommandLeftDir() {
+		assertTrue(mCon.command(RobotHelper.CMD_LEFT));
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(RobotHelper.NORTH, pos.getDir());
+	}
 
-    public void testCommandLeftCoordY() {
-        assertTrue(mCon.command(RobotHelper.CMD_LEFT));
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(INIT_Y, pos.getY());
-    }
+	public void testCommandLeftPos() {
+		assertTrue(mCon.command(RobotHelper.CMD_LEFT));
+		assertNotNull(mBot.report());
+	}
 
-    public void testCommandRightPos() {
-        assertTrue(mCon.command(RobotHelper.CMD_RIGHT));
-        assertNotNull(mBot.report());
-    }
+	public void testCommandMoveCoordX() {
+		assertTrue(mCon.command(RobotHelper.CMD_MOVE));
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(INIT_X + 1, pos.getX());
+	}
 
-    public void testCommandRightDir() {
-        assertTrue(mCon.command(RobotHelper.CMD_RIGHT));
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(RobotHelper.SOUTH, pos.getDir());
-    }
+	public void testCommandMoveCoordY() {
+		assertTrue(mCon.command(RobotHelper.CMD_MOVE));
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(INIT_Y, pos.getY());
+	}
 
-    public void testCommandRightCoordX() {
-        assertTrue(mCon.command(RobotHelper.CMD_RIGHT));
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(INIT_X, pos.getX());
-    }
+	public void testCommandMoveDir() {
+		assertTrue(mCon.command(RobotHelper.CMD_MOVE));
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(RobotHelper.EAST, pos.getDir());
+	}
 
-    public void testCommandRightCoordY() {
-        assertTrue(mCon.command(RobotHelper.CMD_RIGHT));
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(INIT_Y, pos.getY());
-    }
+	public void testCommandMovePos() {
+		assertTrue(mCon.command(RobotHelper.CMD_MOVE));
+		assertNotNull(mBot.report());
+	}
 
-    public void testCommandNonePos() {
-        assertNotNull(mBot.report());
-    }
+	public void testCommandReportAfterReport() {
+		assertNull(mCon.getLastKnownPosition());
+		assertTrue(mCon.command(RobotHelper.CMD_REPORT));
+		assertNotNull(mCon.getLastKnownPosition());
+	}
 
-    public void testCommandNoneDir() {
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(RobotHelper.EAST, pos.getDir());
-    }
+	public void testCommandReportPriorReport() {
+		assertNull(mCon.getLastKnownPosition());
+	}
 
-    public void testCommandNoneCoordX() {
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(INIT_X, pos.getX());
-    }
+	public void testCommandRightCoordX() {
+		assertTrue(mCon.command(RobotHelper.CMD_RIGHT));
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(INIT_X, pos.getX());
+	}
 
-    public void testCommandNoneCoordY() {
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(INIT_Y, pos.getY());
-    }
+	public void testCommandRightCoordY() {
+		assertTrue(mCon.command(RobotHelper.CMD_RIGHT));
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(INIT_Y, pos.getY());
+	}
 
-    public void testCommandMovePos() {
-        assertTrue(mCon.command(RobotHelper.CMD_MOVE));
-        assertNotNull(mBot.report());
-    }
+	public void testCommandRightDir() {
+		assertTrue(mCon.command(RobotHelper.CMD_RIGHT));
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(RobotHelper.SOUTH, pos.getDir());
+	}
 
-    public void testCommandMoveDir() {
-        assertTrue(mCon.command(RobotHelper.CMD_MOVE));
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(RobotHelper.EAST, pos.getDir());
-    }
+	public void testCommandRightPos() {
+		assertTrue(mCon.command(RobotHelper.CMD_RIGHT));
+		assertNotNull(mBot.report());
+	}
 
-    public void testCommandMoveCoordX() {
-        assertTrue(mCon.command(RobotHelper.CMD_MOVE));
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(INIT_X + 1, pos.getX());
-    }
+	public void testCommandStationaryCoordX() {
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(INIT_X, pos.getX());
+	}
 
-    public void testCommandMoveCoordY() {
-        assertTrue(mCon.command(RobotHelper.CMD_MOVE));
-        Position pos = mBot.report();
-        assertNotNull(pos);
-        assertEquals(INIT_Y, pos.getY());
-    }
+	public void testCommandStationaryCoordY() {
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(INIT_Y, pos.getY());
+	}
+
+	public void testCommandStationaryDir() {
+		Position pos = mBot.report();
+		assertNotNull(pos);
+		assertEquals(RobotHelper.EAST, pos.getDir());
+	}
+
+	public void testCommandStationaryPos() {
+		assertNotNull(mBot.report());
+	}
 
 }
