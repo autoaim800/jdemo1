@@ -20,6 +20,10 @@ public class TableRobot implements RobotI {
 	public TableRobot(int width) {
 		mTable = new SquareTable(RobotHelper.DIR4, width);
 	}
+	
+	public TableRobot(Surface2DI surface){
+	    mTable = surface;
+	}
 
 	@Override
 	public boolean left() {

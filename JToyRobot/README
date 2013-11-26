@@ -1,0 +1,3 @@
+console usage:
+$java -cp bin com.billsoft.jtoyrobot.impl.RobotConsole  scrs/scr1.txt
+$java -cp bin com.billsoft.jtoyrobot.impl.RobotConsole < scrs/scr2.txt

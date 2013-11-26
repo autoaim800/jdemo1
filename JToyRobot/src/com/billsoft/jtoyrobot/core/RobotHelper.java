@@ -30,6 +30,9 @@ public class RobotHelper {
 	public static final String S_UNKNOWN = "UNKNOWN";
 
 	public static final String CMD_PLACE_00E = "PLACE 0,0,EAST";
+    public static final String CMD_PLACE_44W = "PLACE 4,4,WEST";
+
+    public static final int REPEAT = 1000;
 
 	public static String obtainStrRepr(int dir) {
 		switch (dir) {
@@ -46,6 +49,7 @@ public class RobotHelper {
 		case DOWN:
 			return S_DOWN;
 		}
+		info("unknown dir=" + dir);
 		return S_UNKNOWN;
 	}
 
@@ -68,4 +72,8 @@ public class RobotHelper {
 	public static void error(String s) {
 		System.err.println(s);
 	}
+	
+	public static void info(String s) {
+        System.out.println(s);
+    }
 }
