@@ -5,12 +5,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.billsoft.triptra.Const;
 import com.billsoft.triptra.xsd.queryproducts.Decimal103;
 import com.v3leisure.www.schemas.cabs._1_0.cabs_common_xsd.ArrayOfCO_TypeType;
+import com.v3leisure.www.schemas.cabs._1_0.cabs_common_xsd.CO_IdValueType;
 import com.v3leisure.www.schemas.cabs._1_0.cabs_common_xsd.CO_TypeType;
 import com.v3leisure.www.schemas.cabs._1_0.cabs_common_xsd.PR_BookingInformationType;
 import com.v3leisure.www.schemas.cabs._1_0.cabs_common_xsd.PR_BusinessDetailsType;
 import com.v3leisure.www.schemas.cabs._1_0.cabs_common_xsd.PR_ContactDetailsType;
+import com.v3leisure.www.schemas.cabs._1_0.cabs_common_xsd.PR_MarketingDetailsType;
 import com.v3leisure.www.schemas.cabs._1_0.cabs_common_xsd.PR_MerchantDetailsType;
 import com.v3leisure.www.schemas.cabs._1_0.cabs_common_xsd.PR_ProductType;
 import com.v3leisure.www.schemas.cabs._1_0.cabs_common_xsd.PR_ProviderLongRSType;
@@ -37,7 +40,6 @@ public class Provider extends VThreeInserter {
             return 0;
         }
         int afrc = 0;
-
         // for(SomeType obj:param.getRow()){
         try {
 
@@ -267,5 +269,41 @@ public class Provider extends VThreeInserter {
         } else {
             pstmt.setFloat(i, obj.floatValue());
         }
+    }
+
+    public static int insert(Connection conn, String providerId, PR_MarketingDetailsType md) {
+        if (null == md || null == md.getIndustryCategory()) {
+            Const.logger.info(String.format("product %s does not have industry category",
+                    providerId));
+            return 0;
+        }
+
+        String cmd = "insert into t4_ProviderIndustryCategory(product_id, cat_id) values (?, ?)";
+
+        PreparedStatement pstmt;
+        try {
+            pstmt = conn.prepareStatement(cmd);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 0;
+        }
+        int afrc = 0;
+
+        for (CO_IdValueType cat : md.getIndustryCategory()) {
+            try {
+                pstmt.setString(1, providerId);
+                pstmt.setString(2, cat.getId());
+
+                afrc += pstmt.executeUpdate();
+                pstmt.clearParameters();
+
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        // out of for
+        return afrc;
     }
 }
