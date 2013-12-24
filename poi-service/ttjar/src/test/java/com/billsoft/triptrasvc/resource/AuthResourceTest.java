@@ -17,8 +17,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.billsoft.triptrasvc.Main;
-import com.billsoft.triptrasvc.parcel.LoginRequest;
-import com.billsoft.triptrasvc.parcel.LoginResponse;
+import com.billsoft.triptrasvc.request.LoginRequest;
+import com.billsoft.triptrasvc.response.LoginResponse;
 
 public class AuthResourceTest extends GenericResource {
 

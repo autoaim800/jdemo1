@@ -10,16 +10,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 
-import com.billsoft.triptrasvc.parcel.PoiCreateRequest;
+import com.billsoft.triptrasvc.cli.PoiCli;
 import com.billsoft.triptrasvc.parcel.PoiParcel;
-import com.billsoft.triptrasvc.parcel.PoiUpdateRequest;
-import com.billsoft.triptrasvc.parcel.SearchResponse;
+import com.billsoft.triptrasvc.request.PoiCreateRequest;
+import com.billsoft.triptrasvc.request.PoiUpdateRequest;
+import com.billsoft.triptrasvc.response.PoiCreateResponse;
+import com.billsoft.triptrasvc.response.SearchResponse;
 
 @Path("poi")
 public class PoiResource extends GenericResource {
@@ -32,8 +29,16 @@ public class PoiResource extends GenericResource {
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     public Response create(PoiCreateRequest cr) {
-        log.info("create()");
-        return Response.status(STA_OK).build();
+        
+        log.info("poi-resource.create()");
+
+        String token = cr.getToken();
+        PoiParcel[] pois = cr.getPois();
+
+        PoiCli pw = new PoiCli();
+        int[] poiIds = pw.createPoi(token, pois);
+
+        return Response.ok(new PoiCreateResponse(poiIds)).build();
     }
 
     /**
@@ -48,6 +53,10 @@ public class PoiResource extends GenericResource {
     @DELETE
     public Response delete(@QueryParam("token") String token, @QueryParam("id") int id) {
         log.info("delete() id=" + id);
+
+        PoiCli pw = new PoiCli();
+        int ret = pw.delete(token, id);
+
         return Response.status(STA_OK).build();
     }
 
@@ -64,7 +73,9 @@ public class PoiResource extends GenericResource {
         log.info(String.format("search() id=%s lat=%s long=%s name=%s\n", id, latitude, longitude,
                 name));
 
-        PoiParcel[] pois = new PoiParcel[] { new PoiParcel(0, 2), new PoiParcel(0, 3) };
+        PoiCli pw = new PoiCli();
+        PoiParcel[] pois = pw.search(id, latitude, longitude, name);
+
         SearchResponse sr = new SearchResponse(pois, 1, 10);
 
         return Response.ok(sr).build();
@@ -79,6 +90,13 @@ public class PoiResource extends GenericResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Response update(PoiUpdateRequest ur) {
         log.info("update()");
+
+        String token = ur.getToken();
+        PoiParcel[] pois = ur.getPois();
+
+        PoiCli pw = new PoiCli();
+        int[] stas = pw.updatePoi(token, pois);
+
         return Response.status(STA_OK).build();
     }
 

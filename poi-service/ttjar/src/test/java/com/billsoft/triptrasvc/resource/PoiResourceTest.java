@@ -14,10 +14,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.billsoft.triptrasvc.Main;
-import com.billsoft.triptrasvc.parcel.PoiCreateRequest;
 import com.billsoft.triptrasvc.parcel.PoiParcel;
-import com.billsoft.triptrasvc.parcel.PoiUpdateRequest;
-import com.billsoft.triptrasvc.parcel.SearchResponse;
+import com.billsoft.triptrasvc.request.PoiCreateRequest;
+import com.billsoft.triptrasvc.request.PoiUpdateRequest;
+import com.billsoft.triptrasvc.response.SearchResponse;
 
 public class PoiResourceTest extends GenericResource {
 
