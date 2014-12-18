@@ -22,7 +22,5 @@ public class Currency {
     public String toString() {
         return "Currency [count=" + count + ", type=" + type + "]";
     }
-    
-    
 
 }

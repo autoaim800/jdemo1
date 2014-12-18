@@ -1,8 +1,11 @@
 package com.billapp.cashman.vault;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observer;
 
+import com.billapp.cashman.Helper;
 import com.billapp.cashman.comm.Currency;
 import com.billapp.cashman.comm.CurrencyEnum;
 
@@ -11,9 +14,21 @@ import com.billapp.cashman.comm.CurrencyEnum;
  */
 public class FakeVault implements VaultI {
 
+    private List<Currency> dispensedNoteList;
+    private Map<CurrencyEnum, Integer> storageData;
+    private VaultData vd;
+    private VaultController controller;
+
     @Override
     public void addNotes(List<Currency> noteList) {
-        // TODO Auto-generated method stub
+        // no need to add, already has a lot
+
+    }
+
+    @Override
+    public void dispense(List<Currency> payload) {
+        Helper.printLc(payload);
+        dispensedNoteList = payload;
 
     }
 
@@ -25,20 +40,31 @@ public class FakeVault implements VaultI {
 
     @Override
     public VaultController getControler() {
-        // TODO Auto-generated method stub
-        return null;
+        if (null == controller) {
+            controller = new VaultController(this);
+        }
+        return controller;
+    }
+
+    @Override
+    public List<Currency> getDispensedNoteList() {
+        return dispensedNoteList;
     }
 
     @Override
     public VaultStateEnum getState() {
-        // TODO Auto-generated method stub
-        return null;
+        // always ready
+        return VaultStateEnum.INITIALIZED;
     }
 
     @Override
     public void initialize(List<Currency> noteList) {
-        // TODO Auto-generated method stub
 
+        vd = new VaultData();
+        vd.addNotes(noteList);
+        getControler().initialize(-1, noteList);
+        // fake vault with real controller
+        vd.addObserver(getControler());
     }
 
     @Override
@@ -48,21 +74,14 @@ public class FakeVault implements VaultI {
     }
 
     @Override
-    public void dispense(List<Currency> payload) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public List<Currency> getDispensedNoteList() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public void request(int dollarAmount, int centAmount) {
-        // TODO Auto-generated method stub
+        getControler().withdraw(dollarAmount, centAmount);
+    }
 
+    @Override
+    public void forwardObserver(Observer o) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

@@ -1,15 +1,17 @@
 package com.billapp.cashman.vault;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.billapp.cashman.Cashman;
 import com.billapp.cashman.Code;
 import com.billapp.cashman.Conf;
 import com.billapp.cashman.Displayer;
+import com.billapp.cashman.Helper;
 
 public class VaultDeviceReSupplyTest {
 
@@ -20,18 +22,11 @@ public class VaultDeviceReSupplyTest {
         vault = VaultDevice.getInstance();
         assertNotNull(vault);
         vault.initialize();
-        Cashman.sleep(Conf.TIMEOUT_DEV_WARN_UP);
+        Helper.sleep(Conf.TIMEOUT_DEV_WARN_UP);
     }
 
     @After
     public void tearDown() throws Exception {
-    }
-
-    @Test
-    public void testReSupplyLog() {
-        fail("not impl");
-        assertTrue(Displayer.getInstance().getMsgs()
-                .contains(Code.OK_RE_SUPPLY));
     }
 
     @Test
@@ -44,7 +39,14 @@ public class VaultDeviceReSupplyTest {
 
         // assert new balance
     }
-    
+
+    @Test
+    public void testReSupplyLog() {
+        fail("not impl");
+        assertTrue(Displayer.getInstance().getMsgs()
+                .contains(Code.OK_RE_SUPPLY));
+    }
+
     @Test
     public void testWithdrawWithWarning() {
         fail("not impl");

@@ -1,86 +1,41 @@
 package com.billapp.cashman;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
-import com.billapp.cashman.comm.Currency;
-import com.billapp.cashman.comm.CurrencyEnum;
-import com.billapp.cashman.comm.CurrencyEnumComparator;
+import com.billapp.cashman.vault.VaultDevice;
 
 public class Cashman {
     public static void main(String[] args) {
 
-        Set<CurrencyEnum> sortedSet = new TreeSet<CurrencyEnum>(
-                new CurrencyEnumComparator());
-        Map<CurrencyEnum, Integer> dollarMap = new HashMap<CurrencyEnum, Integer>();
+        VaultDevice vd = VaultDevice.getInstance();
+        vd.initialize(Helper.buildNoteList("6x20 5x50"));
+        Helper.sleep(Conf.TIMEOUT_DEV_WARN_UP);
+        Helper.printMc(vd.getAvailablility());
 
-        dollarMap.put(CurrencyEnum.COIN_2, 11);
-        dollarMap.put(CurrencyEnum.NOTE_50, 5);
-        dollarMap.put(CurrencyEnum.NOTE_100, 7);
-        dollarMap.put(CurrencyEnum.NOTE_20, 6);
+        vd.request(20);
+        vd.request(40);
+        vd.request(50);
+        vd.request(70);
+        vd.request(80);
+        vd.request(100);
+        vd.request(150);
+        vd.request(60);
+        vd.request(110);
+        vd.shutdown();
 
-        sortedSet.addAll(dollarMap.keySet());
-
-        for (CurrencyEnum rank : sortedSet) {
-            System.out.println(rank);
-        }
-
-        // VaultDevice vd = VaultDevice.getInstance();
-        // vd.initialize();
-        // System.out.println(vd.getState());
-        // sleep(1200);
-        // System.out.println(vd.getState());
-
-    }
-
-    public static void sleep(long ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    public static void info(String s) {
-        System.out.println(s);
-    }
-
-    public static void printMc(Map<CurrencyEnum, Integer> am) {
-        info("Mc:");
-        for (CurrencyEnum type : am.keySet()) {
-            info(String.format("%s x%s", type, am.get(type)));
-        }
-    }
-
-    public static void printLc(List<Currency> payload) {
-        info("Lc:");
-        for (Currency cmd : payload) {
-            info(cmd.toString());
-        }
-    }
-
-    public static int getSummary(List<Currency> payload) {
-        int sum = 0;
-        if (null != payload) {
-            for (Currency note : payload) {
-                sum += note.getCount() * note.getType().value;
-            }
-        }
-        return sum;
-    }
-
-    public static int getSummary(Map<CurrencyEnum, Integer> am) {
-        int sum = 0;
-        if (null != am) {
-            for (CurrencyEnum type : am.keySet()) {
-                int noteValue = type.value;
-                sum += am.get(type) * noteValue;
-            }
-        }
-        return sum;
+        vd = VaultDevice.getInstance();
+        vd.initialize(Helper.buildNoteList("8x20 3x50"));
+        Helper.sleep(Conf.TIMEOUT_DEV_WARN_UP);
+        Helper.printMc(vd.getAvailablility());
+        vd.request(200);
+        vd.shutdown();
+        
+        vd = VaultDevice.getInstance();
+        vd.initialize(Helper.buildNoteList("5x20 3x50"));
+        Helper.sleep(Conf.TIMEOUT_DEV_WARN_UP);
+        Helper.printMc(vd.getAvailablility());
+        vd.request(100);
+        vd.shutdown();
+        
+        
     }
 }

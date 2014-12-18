@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +40,7 @@ public class VaultDeviceInitializedTest extends CashmanTestCase {
 
         Map<CurrencyEnum, Integer> ret2 = vault.getAvailablility();
         assertNotNull("null availability", ret2);
-        
+
         assertEquals(ret1, ret2);
     }
 

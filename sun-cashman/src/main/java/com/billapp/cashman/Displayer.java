@@ -6,16 +6,6 @@ import java.util.Deque;
 public class Displayer {
 
     private static Displayer instance;
-    private Deque<String> msgs;
-
-    public Deque<String> getMsgs() {
-        return msgs;
-    }
-
-    private Displayer() {
-        msgs = new ArrayDeque<String>();
-    }
-
     public static Displayer getInstance() {
         if (null == instance) {
             instance = new Displayer();
@@ -26,6 +16,12 @@ public class Displayer {
     private static void writeln(String s) {
         System.out.println(s);
 
+    }
+
+    private Deque<String> msgs;
+
+    private Displayer() {
+        msgs = new ArrayDeque<String>();
     }
 
     public void display(int code) {
@@ -55,7 +51,7 @@ public class Displayer {
         case Code.OK_RE_SUPPLY:
             msg = "re-supplied done";
             break;
-            
+
         case Code.OK_CTL_UPDATE:
             msg = "update controller done";
             break;
@@ -87,5 +83,9 @@ public class Displayer {
 
     public void display(String s) {
         writeln(s);
+    }
+
+    public Deque<String> getMsgs() {
+        return msgs;
     }
 }

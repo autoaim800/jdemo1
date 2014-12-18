@@ -9,7 +9,6 @@ import com.billapp.cashman.Code;
 import com.billapp.cashman.Displayer;
 import com.billapp.cashman.comm.Currency;
 import com.billapp.cashman.comm.CurrencyEnum;
-import com.billapp.cashman.vault.MockData;
 import com.billapp.cashman.vault.VaultData;
 import com.billapp.cashman.vault.VaultDevice;
 
@@ -42,14 +41,6 @@ public class LowReSupplier implements Observer {
             if (!vd.getStorageData().containsKey(noteType)
                     || vd.getStorageData().get(noteType) <= noteThreshold) {
                 resupply();
-            }
-        }
-
-        else if (o instanceof MockData) {
-            MockData md = (MockData) o;
-            if (!md.getStorageData().containsKey(noteType)
-                    || md.getStorageData().get(noteType) <= noteThreshold) {
-                md.addWarn(noteType);
             }
         }
     }

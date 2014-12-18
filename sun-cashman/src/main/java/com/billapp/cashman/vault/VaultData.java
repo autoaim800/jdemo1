@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
-import com.billapp.cashman.Cashman;
+import com.billapp.cashman.Helper;
 import com.billapp.cashman.comm.Currency;
 import com.billapp.cashman.comm.CurrencyEnum;
 
@@ -51,18 +51,18 @@ public class VaultData extends Observable {
      *            an object of <code>Currency</code>
      */
     private void remove(Currency note) {
-        
+
         if (null == note || null == note.getType()) {
-            Cashman.info("null note?");
+            Helper.info("null note?");
             return;
         }
         if (null == storageData) {
-            Cashman.info("null storage data?");
+            Helper.info("null storage data?");
             return;
         }
         if (null == storageData.get(note.getType())) {
-            Cashman.info("no fund for:"  + note.getType());
-            Cashman.printMc(storageData);
+            Helper.info("no fund for:" + note.getType());
+            Helper.printMc(storageData);
             return;
         }
         int currCount = storageData.get(note.getType());

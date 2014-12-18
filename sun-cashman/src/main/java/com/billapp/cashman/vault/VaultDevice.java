@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observer;
 
-import com.billapp.cashman.Cashman;
 import com.billapp.cashman.Code;
 import com.billapp.cashman.Displayer;
+import com.billapp.cashman.Helper;
 import com.billapp.cashman.comm.Currency;
 import com.billapp.cashman.comm.CurrencyEnum;
 
@@ -17,7 +17,7 @@ public class VaultDevice implements VaultI {
         public void run() {
             // do a lot of things
             if (loadTime > 0) {
-                Cashman.sleep(loadTime);
+                Helper.sleep(loadTime);
             }
             postInitialize();
         }
@@ -36,6 +36,8 @@ public class VaultDevice implements VaultI {
 
     private VaultController controller = null;
 
+    private List<Currency> dispensedNoteList;
+
     private long loadTime = 0;
 
     /**
@@ -47,8 +49,6 @@ public class VaultDevice implements VaultI {
 
     private VaultData vaultData;
 
-    private List<Currency> dispensedNoteList;
-
     /*
      * (non-Javadoc)
      * 
@@ -59,13 +59,29 @@ public class VaultDevice implements VaultI {
         vaultData.addNotes(noteList);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.billapp.cashman.vault.VaultI#dispense(java.util.List)
+     */
+    @Override
+    public void dispense(List<Currency> payload) {
+        Displayer.getInstance().display("dispensing");
+        dispensedNoteList = payload;
+        for (Currency note : payload) {
+            Displayer.getInstance().display(note.toString());
+        }
+
+        vaultData.removeNotes(payload);
+    }
+
     /**
      * forward/proxy controller's add-observer request to vault-data object
      * 
      * @param o
      *            an object of observer to be added to vault-data
      */
-    void forwardObserver(Observer o) {
+    public void forwardObserver(Observer o) {
         vaultData.addObserver(o);
     }
 
@@ -100,6 +116,16 @@ public class VaultDevice implements VaultI {
             controller = new VaultController(this);
         }
         return controller;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.billapp.cashman.vault.VaultI#getDispensedNoteList()
+     */
+    @Override
+    public List<Currency> getDispensedNoteList() {
+        return dispensedNoteList;
     }
 
     /*
@@ -237,35 +263,6 @@ public class VaultDevice implements VaultI {
             // another a lot of things to do
         }
         instance = null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.billapp.cashman.vault.VaultI#dispense(java.util.List)
-     */
-    @Override
-    public void dispense(List<Currency> payload) {
-
-        Displayer.getInstance().display("dispensing");
-        dispensedNoteList = payload;
-
-        for (Currency note : payload) {
-            Displayer.getInstance().display(note.toString());
-        }
-
-        vaultData.removeNotes(payload);
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.billapp.cashman.vault.VaultI#getDispensedNoteList()
-     */
-    @Override
-    public List<Currency> getDispensedNoteList() {
-        return dispensedNoteList;
     }
 
 }

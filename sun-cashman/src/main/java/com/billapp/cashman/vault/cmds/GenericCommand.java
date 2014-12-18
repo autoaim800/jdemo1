@@ -11,12 +11,16 @@ public class GenericCommand {
     protected List<Currency> payload;
     protected int returnCode = Code.ERROR;
 
-    public int getReturnCode() {
-        return returnCode;
-    }
-
     public List<Currency> getPayload() {
         return payload;
+    }
+
+    public int getPayloadCount() {
+        int sum = 0;
+        for (Currency note : payload) {
+            sum += note.getCount();
+        }
+        return sum;
     }
 
     public int getPayloadSum() {
@@ -26,14 +30,9 @@ public class GenericCommand {
         }
         return sum;
     }
-    
-    public int getPayloadCount() {
-        int sum = 0;
-        for (Currency note : payload) {
-            sum += note.getCount();
-        }
-        return sum;
+
+    public int getReturnCode() {
+        return returnCode;
     }
-    
-    
+
 }

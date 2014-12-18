@@ -19,31 +19,15 @@ import com.billapp.cashman.vault.cmds.WithdrawSimCommand;
 public class VaultController implements Observer {
 
     private Map<CurrencyEnum, Integer> availableNoteMap;
-    private int vaultId;
+    private int centSum;
+    private int dollarSum;
     private List<Observer> observers;
     private HashMap<CurrencyEnum, Integer> thresholds;
     private VaultI vault;
-    private int centSum;
-    private int dollarSum;
-
-    public int getCentSum() {
-        return centSum;
-    }
-
-    public int getDollarSum() {
-        return dollarSum;
-    }
+    private int vaultId;
 
     public VaultController(VaultI vaultDevice) {
         vault = vaultDevice;
-    }
-
-    public HashMap<CurrencyEnum, Integer> getThresholds() {
-        return thresholds;
-    }
-
-    public List<Observer> getObservers() {
-        return observers;
     }
 
     /**
@@ -54,24 +38,28 @@ public class VaultController implements Observer {
      * @param vaultData
      *            an object of <code>VaultData</code>
      */
-    private void applyObservers() {
+    private void applyReSupplierObservers() {
 
-        VaultDevice vault = VaultDevice.getInstance();
-
+        // TODO to be configurable
+        // only one copy of threshold map
         thresholds = new HashMap<CurrencyEnum, Integer>();
         thresholds.put(CurrencyEnum.NOTE_20, Conf.THRESHOLD_NOTE_20);
         thresholds.put(CurrencyEnum.NOTE_50, Conf.THRESHOLD_NOTE_50);
 
         observers = new ArrayList<Observer>();
 
+        // initialize supplier/observer base on threshold/s
         for (CurrencyEnum type : thresholds.keySet()) {
             Integer threshold = thresholds.get(type);
             observers.add(new LowReSupplier(vaultId, type, threshold,
                     Conf.COUNT_RE_SUPPLY));
         }
 
-        for (Observer o : observers) {
-            vault.forwardObserver(o);
+        // apply re-supplier/observer only to real-vault
+        if (vault instanceof VaultDevice) {
+            for (Observer o : observers) {
+                vault.forwardObserver(o);
+            }
         }
 
         Displayer.getInstance().display(Code.OK_CTL_OBS);
@@ -79,6 +67,22 @@ public class VaultController implements Observer {
 
     public Map<CurrencyEnum, Integer> getAvailability() {
         return availableNoteMap;
+    }
+
+    public int getCentSum() {
+        return centSum;
+    }
+
+    public int getDollarSum() {
+        return dollarSum;
+    }
+
+    public List<Observer> getObservers() {
+        return observers;
+    }
+
+    public HashMap<CurrencyEnum, Integer> getThresholds() {
+        return thresholds;
     }
 
     public void initialize(int vaultId) {
@@ -117,10 +121,20 @@ public class VaultController implements Observer {
             }
         }
 
-        applyObservers();
+        applyReSupplierObservers();
 
         postUpdate();
 
+    }
+
+    private void postUpdate() {
+        for (CurrencyEnum type : availableNoteMap.keySet()) {
+            if (UnitEnum.CENT == type.unit) {
+                centSum += type.centValue * availableNoteMap.get(type);
+            } else {
+                dollarSum += type.value * availableNoteMap.get(type);
+            }
+        }
     }
 
     /**
@@ -149,16 +163,11 @@ public class VaultController implements Observer {
         }
     }
 
-    private void postUpdate() {
-        for (CurrencyEnum type : availableNoteMap.keySet()) {
-            if (UnitEnum.CENT == type.unit) {
-                centSum += type.centValue * availableNoteMap.get(type);
-            } else {
-                dollarSum += type.value * availableNoteMap.get(type);
-            }
-        }
-    }
-
+    /**
+     * controller method to withdraw given amount, after validation and
+     * calculation,
+     * 
+     */
     public synchronized void withdraw(int dollarAmount, int centAmount) {
 
         Displayer.getInstance().display("trying to withdraw:" + dollarAmount);

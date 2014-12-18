@@ -1,17 +1,13 @@
 package com.billapp.cashman.vault;
 
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.billapp.cashman.Cashman;
 import com.billapp.cashman.Code;
 import com.billapp.cashman.Displayer;
 
-public class VaultControllerTest extends CashmanTestCase{
-
+public class VaultControllerTest extends CashmanTestCase {
 
     @Before
     public void setUp() throws Exception {
@@ -23,15 +19,15 @@ public class VaultControllerTest extends CashmanTestCase{
     }
 
     @Test
-    public void testWithdraw100() {
-        vault.getControler().withdraw(100, 0);
-    }
-
-    @Test
     public void testUpdateController() {
         vault.request(40);
         Displayer.getInstance().getMsgs()
                 .contains(String.valueOf(Code.OK_CTL_UPDATE));
+    }
+
+    @Test
+    public void testWithdraw100() {
+        vault.getControler().withdraw(100, 0);
     }
 
 }

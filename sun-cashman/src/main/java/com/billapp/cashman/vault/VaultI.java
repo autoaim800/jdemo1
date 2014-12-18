@@ -2,11 +2,14 @@ package com.billapp.cashman.vault;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Observer;
 
 import com.billapp.cashman.comm.Currency;
 import com.billapp.cashman.comm.CurrencyEnum;
 
 public interface VaultI {
+
+    public abstract void forwardObserver(Observer o);
 
     /**
      * add given list of notes into vault, assume vault has infinite capacity
@@ -20,6 +23,8 @@ public interface VaultI {
      */
     public abstract void addNotes(List<Currency> noteList);
 
+    public abstract void dispense(List<Currency> payload);
+
     /**
      * It must know how many of each type of bank note it has. It should be able
      * to report back how much of each note it has.
@@ -32,6 +37,11 @@ public interface VaultI {
     public abstract Map<CurrencyEnum, Integer> getAvailablility();
 
     public abstract VaultController getControler();
+
+    /**
+     * method for debugging purpose
+     */
+    public abstract List<Currency> getDispensedNoteList();
 
     public abstract VaultStateEnum getState();
 
@@ -59,11 +69,7 @@ public interface VaultI {
      * @param noteList
      *            a list of <code>Currency</code> to be removed
      */
-    public abstract void removeNotes(List<Currency> noteList);
-
-    public abstract void dispense(List<Currency> payload);
-
-    public abstract List<Currency> getDispensedNoteList();
+    public void removeNotes(List<Currency> noteList);
 
     public void request(int dollarAmount, int centAmount);
 }

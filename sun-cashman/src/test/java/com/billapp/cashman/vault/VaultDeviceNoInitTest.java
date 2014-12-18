@@ -1,17 +1,18 @@
 package com.billapp.cashman.vault;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.billapp.cashman.Cashman;
 import com.billapp.cashman.Conf;
+import com.billapp.cashman.Helper;
 import com.billapp.cashman.comm.Currency;
 import com.billapp.cashman.comm.CurrencyEnum;
 
@@ -26,7 +27,7 @@ public class VaultDeviceNoInitTest extends CashmanTestCase {
     @Test
     public void testGetAvailablility() {
         vault.initialize();
-        Cashman.sleep(100);
+        Helper.sleep(100);
         Map<CurrencyEnum, Integer> retMap = vault.getAvailablility();
         assertNotNull("null availability returned", retMap);
         assertTrue("newly init is NOT empty", retMap.keySet().size() < 1);
@@ -44,7 +45,7 @@ public class VaultDeviceNoInitTest extends CashmanTestCase {
         vault.setLoadTime(300);
         vault.initialize();
         assertEquals(VaultStateEnum.INITIALIZING, vault.getState());
-        Cashman.sleep(600);
+        Helper.sleep(600);
         assertEquals(VaultStateEnum.INITIALIZED, vault.getState());
     }
 
@@ -55,7 +56,7 @@ public class VaultDeviceNoInitTest extends CashmanTestCase {
         noteList.add(new Currency(CurrencyEnum.NOTE_20, 30));
         noteList.add(new Currency(CurrencyEnum.NOTE_50, 50));
         vault.initialize(noteList);
-        Cashman.sleep(Conf.TIMEOUT_DEV_WARN_UP);
+        Helper.sleep(Conf.TIMEOUT_DEV_WARN_UP);
 
         Map<CurrencyEnum, Integer> retMap = vault.getAvailablility();
         assertNotNull("null availability", retMap);

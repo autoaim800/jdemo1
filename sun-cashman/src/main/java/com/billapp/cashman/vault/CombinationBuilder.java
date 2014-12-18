@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import com.billapp.cashman.Cashman;
 import com.billapp.cashman.Conf;
 import com.billapp.cashman.Displayer;
+import com.billapp.cashman.Helper;
 import com.billapp.cashman.comm.Currency;
 import com.billapp.cashman.comm.CurrencyEnum;
 import com.billapp.cashman.comm.CurrencyEnumComparator;
@@ -21,18 +21,11 @@ import com.billapp.cashman.vault.cmds.WithdrawSimCommand;
  * 
  */
 public class CombinationBuilder extends CombinatoinFilter {
+
     public static class Combination {
-        private int rest;
-
-        public int getRest() {
-            return rest;
-        }
-
-        public List<Currency> getNoteList() {
-            return noteList;
-        }
-
         private List<Currency> noteList;
+
+        private int rest;
 
         public Combination(int rest, List<Currency> noteList) {
             super();
@@ -40,15 +33,18 @@ public class CombinationBuilder extends CombinatoinFilter {
             this.noteList = noteList;
         }
 
+        public List<Currency> getNoteList() {
+            return noteList;
+        }
+
+        public int getRest() {
+            return rest;
+        }
     }
 
     private int centAmount = 0;
 
     private int dollarAmount = 0;
-
-    public List<WithdrawSimCommand> getPossibleList() {
-        return possibleList;
-    }
 
     public CombinationBuilder(Map<CurrencyEnum, Integer> availabilityMap,
             Map<CurrencyEnum, Integer> thresholdMap) {
@@ -84,6 +80,7 @@ public class CombinationBuilder extends CombinatoinFilter {
         sortedTypeSet.addAll(dollarMap.keySet());
 
         CurrencyEnum miniNoteType = sortedTypeSet.last();
+        // TODO poor design, to be improved
         int miniNoteValue = miniNoteType.value;
         if (UnitEnum.CENT == unit) {
             miniNoteValue = miniNoteType.centValue;
@@ -120,7 +117,12 @@ public class CombinationBuilder extends CombinatoinFilter {
     }
 
     /**
-     * on or less than threshold will trigger warning
+     * build a withdraw command, on or less than threshold will trigger warning,
+     * command/combination with warning is still a valid combination, unlike
+     * command with error
+     * 
+     * @return an object of <code>WithdrawSimCommand</code>, null for
+     *         no-combination
      */
     public WithdrawSimCommand buildWithdrawCommand() {
         Displayer.getInstance().display("build withdraw for:" + dollarAmount);
@@ -129,7 +131,7 @@ public class CombinationBuilder extends CombinatoinFilter {
 
         simulateWithdraw();
 
-        filter();
+        filteredList = filterPossibleList();
 
         WithdrawSimCommand cmd = getFirst();
 
@@ -151,7 +153,7 @@ public class CombinationBuilder extends CombinatoinFilter {
             final TreeSet<CurrencyEnum> sortedTypeSet,
             List<Currency> pendingNote) {
 
-        Cashman.info("estabilish base-line for:" + amount);
+        Helper.info("estabilish base-line for:" + amount);
 
         int rest = amount;
 
@@ -181,20 +183,28 @@ public class CombinationBuilder extends CombinatoinFilter {
     }
 
     /**
+     * return the possible-list for testing purpose
+     * 
+     * @return a list of <code>WithdrawSimCommand<code>
+     */
+    public List<WithdrawSimCommand> getPossibleList() {
+        return possibleList;
+    }
+
+    /**
      * merge given adjustment into given pending-note
      * 
      * @param pendingNote
-     *            in-out parameter of pending-note
+     *            pending-note from base-line
      * @param adjustment
      *            a list of adjustment
-     * @param sortedTypeSet
      * @return a refreshed pending-note-list
      */
     private List<Currency> mergeToPending(final List<Currency> pendingNote,
             final List<Currency> adjustment,
             final TreeSet<CurrencyEnum> sortedTypeSet) {
-        Map<CurrencyEnum, Integer> pm = lcToMc(pendingNote);
-        Map<CurrencyEnum, Integer> am = lcToMc(adjustment);
+        Map<CurrencyEnum, Integer> pm = Helper.lcToMc(pendingNote);
+        Map<CurrencyEnum, Integer> am = Helper.lcToMc(adjustment);
 
         List<Currency> retList = new ArrayList<Currency>();
         for (CurrencyEnum type : sortedTypeSet) {
@@ -213,27 +223,17 @@ public class CombinationBuilder extends CombinatoinFilter {
     }
 
     /**
-     * covert list-currency into map-currency
-     */
-    private Map<CurrencyEnum, Integer> lcToMc(List<Currency> lc) {
-        Map<CurrencyEnum, Integer> ret = new HashMap<CurrencyEnum, Integer>();
-        for (Currency note : lc) {
-            if (ret.containsKey(note.getType())) {
-                Integer currCount = ret.get(note.getType());
-                ret.put(note.getType(), note.getCount() + currCount);
-            } else {
-                ret.put(note.getType(), note.getCount());
-            }
-        }
-        return ret;
-    }
-
-    /**
+     * base on base-line, return 1 biggest note to the pool, replace the same
+     * amount (and remain amount) with smaller note/s
+     * 
      * @param amount
+     *            an integer of total request amount
      * @param dollarMap
-     *            original available dollar map without knowledge of pendingNote
+     *            current dollar availability map after base-line
      * @param unit
+     *            enum of currency unit
      * @param sortedTypeSet
+     *            a tree-set of sorted currency type (descent order)
      * @param pendingNote
      *            in-out parameter, always keeps last record of combination,
      *            even unsuccessful, order by note-value descent
@@ -270,10 +270,6 @@ public class CombinationBuilder extends CombinatoinFilter {
         // ready to overwrite pending-note
         // pendingNote.remove(0);
         adjustment.add(new Currency(bigNoteType, -1));
-        // if (newCount > 0) {
-        // Currency newBigNote = new Currency(bigNoteType, newCount);
-        // pendingNote.add(0, newBigNote);
-        // }
 
         // increase rest
         rest += bigNoteValue;
@@ -281,7 +277,6 @@ public class CombinationBuilder extends CombinatoinFilter {
         // begin roll-calculation
         // but only for the rest from note-value smaller
         // than big-note-value
-
         for (CurrencyEnum type : sortedTypeSet) {
 
             int noteValue = type.value;
@@ -321,6 +316,11 @@ public class CombinationBuilder extends CombinatoinFilter {
         this.dollarAmount = dollarAmount;
     }
 
+    /**
+     * simulate combination against availability and threshold, return-code and
+     * warn-count are to be written back to itself
+     * 
+     */
     private void simulateWithdraw() {
         for (WithdrawSimCommand cmd : possibleList) {
             cmd.execute();

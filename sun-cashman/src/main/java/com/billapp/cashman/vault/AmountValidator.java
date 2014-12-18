@@ -1,9 +1,5 @@
 package com.billapp.cashman.vault;
 
-import java.util.Map;
-
-import com.billapp.cashman.Displayer;
-import com.billapp.cashman.comm.CurrencyEnum;
 
 public class AmountValidator {
 
