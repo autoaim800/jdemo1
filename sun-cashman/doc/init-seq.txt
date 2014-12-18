@@ -1,0 +1,16 @@
+@startuml
+VaultDevice -> VaultLoader : initialize vault
+VaultDevice <-- VaultLoader : done
+
+VaultDevice -> VaultController : initialize
+
+loop multiple observers
+VaultController -> LowReSupplier : bind observer
+VaultController <-- LowReSupplier : done
+end
+
+VaultDevice <-- VaultController : done
+
+VaultDevice -> VaultDevice : initialize VaultData (enable VaultController as observer)
+
+@enduml

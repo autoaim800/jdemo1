@@ -1,0 +1,13 @@
+@startuml
+
+[*] --> INITIALIZING
+INITIALIZING : can check availability but can NOT withdraw nor deposit
+
+INITIALIZING --> INITIALIZED
+INITIALIZED : can withdraw and deposit but can NOT initialize
+
+INITIALIZED --> SHUTTING_DOWN
+SHUTTING_DOWN --> POWERED_OFF
+POWERED_OFF --> [*]
+
+@enduml

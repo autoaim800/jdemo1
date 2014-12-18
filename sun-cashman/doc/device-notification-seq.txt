@@ -1,0 +1,11 @@
+@startuml
+VaultDevice -> VaultDevice : dispense or deposit
+VaultDevice -> VaultData : update balance
+
+VaultData -> VaultController : notification
+
+loop multiple suppliers/observers
+VaultData -> LowReSupplier : notification (only re-supplier on reaching threshold)
+end
+
+@enduml

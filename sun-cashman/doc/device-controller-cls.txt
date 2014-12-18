@@ -1,0 +1,14 @@
+@startuml
+VaultDevice *-- VaultController
+VaultDevice o-- Displayer
+
+VaultController o-- CombinationBuilder
+CombinationBuilder <|-- ConbinationFilter
+
+CombinationBuilder *-- WithdrawSimCommand
+
+VaultController *-- LowReSupplier
+
+WithdrawSimCommand <|-- GenericCommand
+
+@enduml

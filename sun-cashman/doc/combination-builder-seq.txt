@@ -1,0 +1,19 @@
+@startuml
+VaultDevice -> VaultController : request validation and calculation
+
+VaultController -> CombinationBuilder : request amount
+
+CombinationBuilder -> VaultController : request availability and threshold
+
+CombinationBuilder -> CombinationBuilder : build possible combination/s
+
+CombinationBuilder -> CombinationBuilder : simulate withdraw with possible combinations
+
+CombinationBuilder -> CombinationFilter : request to filter
+
+CombinationBuilder <-- CombinationFilter : filtered combination/s
+
+VaultController <-- CombinationBuilder : first choice
+
+VaultDevice <-- VaultController : payload to dispense
+@enduml
